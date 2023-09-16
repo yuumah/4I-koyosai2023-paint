@@ -1,0 +1,17 @@
+.vs/
+Intermediate/
+Paint.sln
+Paint/stdafx.h
+Paint/stdafx.cpp
+Paint/.editorconfig
+Paint/Paint.vcxproj
+Paint/Paint.vcxproj.filters
+Paint/Paint.vcxproj.user
+Paint/App/AS_DEBUG
+Paint/App/dll
+Paint/App/engine
+Paint/App/example
+Paint/App/icon.ico
+Paint/App/Paint.exe
+Paint/App/Paint(debug).exe
+Paint/App/Resource.rc
