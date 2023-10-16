@@ -40,9 +40,9 @@ void Paint::bfs_bucket(const Point &start) {
 		que.pop();
 		for (const Point& delta : dydx) {
 			const Point next = now + delta;
-			if (is_in_image(next) and (not visited[next.y][next.x])) {
+			if (is_in_image(next) and (not visited[next.y][next.x])) {	
 				if (image[next] != Palette::Black) {
-					visited[now.y][now.x] = true;
+					visited[next.y][next.x] = true;
 					que.push(next);
 				}
 			}
