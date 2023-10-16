@@ -1,9 +1,15 @@
-﻿# include <Siv3D.hpp> // OpenSiv3D v0.6.9
+﻿# include <Siv3D.hpp> // Siv3D v0.6.12
+# include "Paint.hpp"
 
 
-void Main() {
-	Scene::SetBackground(ColorF{ 0.6, 0.8, 0.7 });
+void Main(){
 
+	Scene::SetBackground(Palette::White);
+	Paint paint(U"line_drawing/ohana.png");
 	while (System::Update()) {
+		paint.draw();
+		paint.update();
 	}
+
+
 }
