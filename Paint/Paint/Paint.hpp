@@ -1,4 +1,6 @@
-﻿# include <Siv3D.hpp> // Siv3D v0.6.12
+﻿# pragma once
+# include <Siv3D.hpp> // Siv3D v0.6.12
+# include "ColorPalette.hpp"
 
 const Array<Point> dydx = { {1,0},{0,-1},{-1,0},{0,1} };
 
@@ -13,8 +15,10 @@ public:
 	DynamicTexture& get_texture(void);
 	void draw(void) const;
 	void update(void);
-//private:
+private:
 	Image image;
+	// BFSの探索用に使用する
+	Image image_nochange;
 	DynamicTexture texture;
 	Point texture_center = Scene::Center();
 	// 座標が画像のサイズに収まっているか
@@ -30,6 +34,6 @@ public:
 	Optional<Point> scenepos_to_imagepos(const Point &point) const;
 	// キャンパスの四角形を表示
 	void draw_canpus_rectframe(void) const;
-	
-	
+	// カラーパレット
+	ColorPalette colorpalette;
 };
