@@ -1,6 +1,7 @@
 ﻿# include <Siv3D.hpp> // Siv3D v0.6.12
 # include "Paint.hpp"
 # include "ColorPalette.hpp"
+# include "LineDrawingReelScene.hpp"
 # include "Data.hpp"
 
 using App = SceneManager<String, Data>;
@@ -12,15 +13,16 @@ void Main(){
 
 	App manager;
 
-
+	LineDrawingReelScene reelscene;
 
 	Paint paint(U"line_drawing/ohana.png");
 	ColorPalette colorpalette;
 	while (System::Update()) {
-		paint.draw();
-		paint.update();
-		colorpalette.draw();
-		colorpalette.update();
+		//paint.draw();
+		//paint.update();
+		//colorpalette.draw();
+		//colorpalette.update();
+		reelscene.draw();
 	}
 
 }

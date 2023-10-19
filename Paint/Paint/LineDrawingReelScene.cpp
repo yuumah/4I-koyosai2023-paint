@@ -11,7 +11,12 @@ LineDrawingReelScene::LineDrawingReelScene(void) {
 void LineDrawingReelScene::draw(void) const {
 	int i = 0;
 	for(const Texture &texture: textures){
-		texture.drawAt();
+		int x = (i++) * texture.size().x / 2 + 50;
+		int y = Scene::Center().y;
+		if (not (0 <= x and x <= Scene::Size().x)){
+		}else {
+			texture.resized(texture.size() / 2).drawAt(x, y);
+		}
 	}
 }
 
