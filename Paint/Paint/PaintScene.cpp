@@ -1,6 +1,8 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
 # include "PaintScene.hpp"
+# include "ProgressBar.hpp"
+# include "Connect.hpp"
 
 PaintScene::PaintScene(const InitData& init) : IScene( init ) {
 	initialize(getData().get_path());
@@ -10,6 +12,7 @@ void PaintScene::initialize(const FilePath& path) {
 	set_image(path);
 	visited.resize(image.height(), Array<bool>(image.width(), false));
 	update_texture();
+	stopwach.start();
 }
 
 void PaintScene::set_image(const FilePath& path) {
@@ -66,7 +69,7 @@ void PaintScene::paint_visited(const Color &color){
 		if (visited[point.y][point.x]) {
 			image[point] = color;
 		}
-	}
+	}		
 }
 
 Optional<Point> PaintScene::get_mousel_pos_pressed(void) const{
@@ -93,12 +96,24 @@ void PaintScene::draw_canpus_rectframe(void) const{
 	Rect(Arg::center( texture_center), image.size()).drawFrame(1, 1, Palette::Black);
 }
 
+void PaintScene::draw_progress_bar(void) const {
+	ProgressBar({ 0,0 }, 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwach.ms(), time_limit_ms);
+}
+
 void PaintScene::draw(void) const {
 	texture.drawAt(texture_center);
-	draw_canpus_rectframe();
 	colorpalette.draw();
+	draw_canpus_rectframe();
+	draw_progress_bar();
 }
 void PaintScene::update(void) {
+	// 時間制限を超えていたら
+	if (stopwach.ms() > time_limit_ms) {
+		stopwach.reset();
+		connect.post_image(this->image);
+		changeScene(U"ReelScene");
+		return;
+	}
 	colorpalette.update();
 	texture_center = Scene::Center();
 	Optional<Point> pos_clicked_scene = get_mousel_pos_pressed();
@@ -112,3 +127,6 @@ void PaintScene::update(void) {
 		update_texture();
 	}
 }
+
+
+

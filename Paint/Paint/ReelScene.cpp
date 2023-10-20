@@ -5,13 +5,13 @@ ReelScene::ReelScene(const InitData &init) :IScene( init ) {
 	int i = 0;
 	for (const String &path : FileSystem::DirectoryContents(U"line_drawing")){
 		Texture texture = Texture(path);
-		Vec2 point = Vec2{ i++ * texture.size().x * scaled_rate + texture_blank, Scene::Center().y };
+		Vec2 point = Vec2{ i++ * (texture.size().x * scaled_rate + texture_blank), Scene::Center().y };
 		assert(texture.size() == original_texture_size);
 		line_drawings << std::make_pair(Texture(path), point);
 		pathes << path;
 	}
 	move_time_ms += Random(-reel_random_amplitude, reel_random_amplitude);
-	reel_length = (original_texture_size.x * scaled_rate + texture_blank) * (line_drawings.size() - 2);
+	reel_length = (original_texture_size.x * scaled_rate + texture_blank) * (line_drawings.size());
 }
 
 void ReelScene::update(void) {

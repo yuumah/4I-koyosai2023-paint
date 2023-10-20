@@ -1,6 +1,8 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
 # include "ColorPalette.hpp"
+# include "ProgressBar.hpp"
+# include "Connect.hpp"
 # include "Data.hpp"
 
 const Array<Point> dydx = { {1,0},{0,-1},{-1,0},{0,1} };
@@ -35,6 +37,17 @@ private:
 	Optional<Point> scenepos_to_imagepos(const Point &point) const;
 	// キャンパスの四角形を表示
 	void draw_canpus_rectframe(void) const;
+	// プログレスバーの表示
+	void draw_progress_bar(void) const;
 	// カラーパレット
 	ColorPalette colorpalette;
+	// 時間制限
+	Stopwatch stopwach;
+	int time_limit_ms = 10000;
+	// 接続用
+	Connect connect;
 };
+
+
+
+

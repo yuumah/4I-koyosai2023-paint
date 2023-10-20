@@ -9,3 +9,9 @@ void Data::set_path(const FilePath &path){
 FilePath Data::get_path(void) {
 	return this->path;
 }
+
+
+Color to_monochrome(const Color &color){
+	int total = color.r + color.g + color.b;
+	return Color(total / 3);
+}

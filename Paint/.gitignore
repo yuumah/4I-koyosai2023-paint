@@ -15,3 +15,6 @@ Paint/App/icon.ico
 Paint/App/Paint.exe
 Paint/App/Paint(debug).exe
 Paint/App/Resource.rc
+Paint/App/token.env
+Paint/App/url.env
+Paint/App/completed.png
