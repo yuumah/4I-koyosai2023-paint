@@ -8,9 +8,10 @@
   <body>
     <img class="bg" src="grass.jpg">
     <body>
+
       <script>
         // 繰り返す回数
-        var repeatCount = 20; // 例: 3回繰り返す
+        var repeatCount = 20;
 
         // 繰り返す回数だけ画像要素を生成して挿入
         for (var i = 0; i < repeatCount; i++) {
@@ -24,8 +25,8 @@
       <script>
         var randomImage = document.getElementsByClassName("flower");
         for (var i = 0; i < randomImage.length; i++) {
-            var randomX = Math.floor(Math.random() * 1700);  // 中西ノーパソディスプレイでは1300
-            var randomY = 800 - Math.floor(Math.random() * 500); // 中西ノーパソディスプレイでは200~600  
+            var randomX = Math.floor(Math.random() * 1700);  // 実行環境に合わせて変更
+            var randomY = 800 - Math.floor(Math.random() * 500); //  同上
             randomImage[i].style.left = randomX + "px";
             randomImage[i].style.top = randomY + "px";
         }
@@ -59,7 +60,5 @@ img {
   top: 0px;
   left: 0px;
 }
-
-
 
 </style>
