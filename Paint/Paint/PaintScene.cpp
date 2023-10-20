@@ -1,38 +1,41 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
-# include "Paint.hpp"
+# include "PaintScene.hpp"
 
-Paint::Paint(void) {}
-Paint::Paint(const FilePath& path) {
+PaintScene::PaintScene(const InitData& init) : IScene( init ) {
+	initialize(getData().get_path());
+}
+
+void PaintScene::initialize(const FilePath& path) {
 	set_image(path);
 	visited.resize(image.height(), Array<bool>(image.width(), false));
 	update_texture();
 }
 
-void Paint::set_image(const FilePath& path) {
+void PaintScene::set_image(const FilePath& path) {
 	this->image = Image(path);
 	this->image_nochange = Image(path);
 }
-Image& Paint::get_image(void) {
+Image& PaintScene::get_image(void) {
 	return this->image;
 }
 
-void Paint::update_texture(const Image& image) {
+void PaintScene::update_texture(const Image& image) {
 	texture.fill(image);
 }
-void Paint::update_texture(void) {
+void PaintScene::update_texture(void) {
 	texture.fill(image);
 }
 
-DynamicTexture& Paint::get_texture(void) {
+DynamicTexture& PaintScene::get_texture(void) {
 	return this->texture;
 }
 
-bool Paint::is_in_image(const Point& point) const {
+bool PaintScene::is_in_image(const Point& point) const {
 	return (0 <= point.y and point.y < image.height() and 0 <= point.x and point.x < image.width());
 }
 
-void Paint::bfs_bucket(const Point& start) {
+void PaintScene::bfs_bucket(const Point& start) {
 	visited.clear();
 	visited.resize(image_nochange.height(), Array<bool>(image_nochange.width(), false));
 	std::queue<Point> que;
@@ -58,7 +61,7 @@ void Paint::bfs_bucket(const Point& start) {
 	}
 }
 
-void Paint::paint_visited(const Color &color){
+void PaintScene::paint_visited(const Color &color){
 	for (const Point& point : step(image.size())) {
 		if (visited[point.y][point.x]) {
 			image[point] = color;
@@ -66,7 +69,7 @@ void Paint::paint_visited(const Color &color){
 	}
 }
 
-Optional<Point> Paint::get_mousel_pos_pressed(void) const{
+Optional<Point> PaintScene::get_mousel_pos_pressed(void) const{
 	if (MouseL.down()) {
 		return Cursor::Pos();
 	}else {
@@ -74,7 +77,7 @@ Optional<Point> Paint::get_mousel_pos_pressed(void) const{
 	}
 }
 
-Optional<Point> Paint::scenepos_to_imagepos(const Point& point) const{
+Optional<Point> PaintScene::scenepos_to_imagepos(const Point& point) const{
 	if (texture_center != Scene::Center()) {
 		throw Error{ U"texture is not on center!!" };
 	}
@@ -86,16 +89,16 @@ Optional<Point> Paint::scenepos_to_imagepos(const Point& point) const{
 	}
 }
 
-void Paint::draw_canpus_rectframe(void) const{
+void PaintScene::draw_canpus_rectframe(void) const{
 	Rect(Arg::center( texture_center), image.size()).drawFrame(1, 1, Palette::Black);
 }
 
-void Paint::draw(void) const {
+void PaintScene::draw(void) const {
 	texture.drawAt(texture_center);
 	draw_canpus_rectframe();
 	colorpalette.draw();
 }
-void Paint::update(void) {
+void PaintScene::update(void) {
 	colorpalette.update();
 	texture_center = Scene::Center();
 	Optional<Point> pos_clicked_scene = get_mousel_pos_pressed();

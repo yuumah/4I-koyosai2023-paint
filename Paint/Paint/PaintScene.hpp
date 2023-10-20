@@ -1,13 +1,14 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
 # include "ColorPalette.hpp"
+# include "Data.hpp"
 
 const Array<Point> dydx = { {1,0},{0,-1},{-1,0},{0,1} };
 
-class Paint {
+class PaintScene : public App::Scene{
 public:
-	Paint(void);
-	Paint(const FilePath& path);
+	PaintScene(const InitData &init);
+	void initialize(const FilePath &path);
 	void set_image(const FilePath &path);
 	Image& get_image(void);
 	void update_texture(void);

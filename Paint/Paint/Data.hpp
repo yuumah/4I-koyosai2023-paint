@@ -1,8 +1,17 @@
-﻿# include <Siv3D.hpp> // Siv3D v0.6.12
-# include "Paint.hpp"
-# include "ColorPalette.hpp"
+﻿# pragma once
+# include <Siv3D.hpp> // Siv3D v0.6.12
+
 
 class Data {
-	Paint paint;
-	ColorPalette colorpalette;
+public:
+	Data(void);
+	void set_path(const FilePath &path);
+	FilePath get_path(void);
+private:
+	FilePath path;
 };
+
+using App = SceneManager<String, Data>;
+
+
+
