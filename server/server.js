@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 7000;
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ limit: "8mb", extended: true }));
+app.use(bodyParser.json());
 
 const token = require("./token.json").token;
 
@@ -30,7 +31,9 @@ app.post("/uploadImages", (req, res) => {
     return;
   }
 
+  console.log(req.files);
   console.log(req.body);
+  console.log(req.query);
 
   res.end("OK");
 });
