@@ -37,7 +37,10 @@ void Connect::post_image(const Image &image){
 void Connect::post_image(const FilePath &filepath){
 	URL url = url_base + U"uploadImages?token=" + token;
 	const String encoded_file = encode_file(filepath);
-	if (const auto response = SimpleHTTP::Post(url, headers, encoded_file.c_str(), encoded_file.size(), save_response_path)) {
+	const std::string data = JSON{
+		{ U"image", encoded_file }
+	}.formatUTF8();
+	if (const auto response = SimpleHTTP::Post(url, headers, data.data(), data.size(), save_response_path)) {
 		if (response.isOK()) {
 			Print << U"OK";
 		}else {

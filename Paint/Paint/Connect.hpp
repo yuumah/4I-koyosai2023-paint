@@ -9,7 +9,7 @@ public:
 	void post_image(const FilePath &filepath);
 private:
 	String encode_file(const FilePath& filepath);
-	const HashTable<String, String> headers{ { U"Content-Type", U"multipart/form-data" } };
+	const HashTable<String, String> headers{ { U"Content-Type", U"application/json" } };
 	URL url_base;
 	String token;
 	FilePath save_png_path = U"./completed.png";
