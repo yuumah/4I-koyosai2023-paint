@@ -17,7 +17,8 @@ void PaintScene::initialize(const FilePath& path) {
 
 void PaintScene::set_image(const FilePath& path) {
 	this->image = Image(path);
-	this->image_nochange = Image(path);
+	this->image_monochrome = Image(path);
+	this->image_nopaint = Image(path);
 }
 Image& PaintScene::get_image(void) {
 	return this->image;
@@ -40,22 +41,22 @@ bool PaintScene::is_in_image(const Point& point) const {
 
 void PaintScene::bfs_bucket(const Point& start) {
 	visited.clear();
-	visited.resize(image_nochange.height(), Array<bool>(image_nochange.width(), false));
+	visited.resize(image_nopaint.height(), Array<bool>(image_nopaint.width(), false));
 	std::queue<Point> que;
 	que.push(start);
 	while (not que.empty()) {
 		Point now = que.front();
 		// 画面の四隅に到着したらBFSをなかったことにする
-		if (now == Point{ 0, 0 } or now == Point{ image_nochange.height(), 0 } or now == Point{ 0, image_nochange.width() } or now == Point{ image_nochange.height(), image_nochange.width() }){
+		if (now == Point{ 0, 0 } or now == Point{ image_nopaint.height(), 0 } or now == Point{ 0, image_nopaint.width() } or now == Point{ image_nopaint.height(), image_nopaint.width() }){
 			visited.clear();
-			visited.resize(image_nochange.height(), Array<bool>(image_nochange.width(), false));
+			visited.resize(image_nopaint.height(), Array<bool>(image_nopaint.width(), false));
 			break;
 		}
 		que.pop();
 		for (const Point& delta : dydx) {
 			const Point next = now + delta;
 			if (is_in_image(next) and (not visited[next.y][next.x])) {	
-				if (image_nochange[next] != Palette::Black) {
+				if (image_nopaint[next] != Palette::Black) {
 					visited[next.y][next.x] = true;
 					que.push(next);
 				}
@@ -68,6 +69,7 @@ void PaintScene::paint_visited(const Color &color){
 	for (const Point& point : step(image.size())) {
 		if (visited[point.y][point.x]) {
 			image[point] = color;
+			image_monochrome[point] = to_monochrome(color);
 		}
 	}		
 }
@@ -107,8 +109,8 @@ void PaintScene::draw(void) const {
 	draw_progress_bar();
 }
 void PaintScene::update(void) {
-	// 時間制限を超えていたら
-	if (stopwach.ms() > time_limit_ms) {
+	// ボタンが押されるか、時間制限を超えていたら
+	if (SimpleGUI::Button(U"完成！", Vec2{Scene::Center().x * 1.5, Scene::Center().y}, unspecified) or stopwach.ms() > time_limit_ms) {
 		stopwach.reset();
 		connect.post_image(this->image);
 		changeScene(U"ReelScene");
@@ -124,7 +126,7 @@ void PaintScene::update(void) {
 	if (pos_clicked_image.has_value()) {
 		bfs_bucket(pos_clicked_image.value());
 		paint_visited(colorpalette.get_color());
-		update_texture();
+		update_texture(this->image_monochrome);
 	}
 }
 
