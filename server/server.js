@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ limit: "8mb", extended: true }));
 app.use(bodyParser.json());
 
 const token = require("./token.json").token;
-const image_types = ["flower", "butterfly"];
+const image_types = ["flower", "butterfly", "elephant", "turtle"];
 
 app.get("/", (req, res) => {
   res.writeHead(200, { "Content-Type": "text/html" });
@@ -19,27 +19,32 @@ app.get("/", (req, res) => {
 
 // 画像の取得
 app.get("/images", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  if(req.query.token !== token){
-    res.end("query parameter is invalid");
-    return;
-  }
+  const index = Number(req.query.index);
   const type = req.query.type;
   let is_valid = false;
   image_types.forEach((t) => {
     if(t === type) is_valid = true;
   });
-  if(!is_valid){
-    res.end("type is invalid");
+  if(!is_valid || isNaN(index)){
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end("query parameter is invalid");
     return;
   }
   const images = glob.sync(`images/${type}/*.png`);
-  let encoded_images = [];
-  images.forEach((image) => {
-    const data = fs.readFileSync(image);
-    encoded_images.push(data.toString("base64"));
-  });
-  res.end(JSON.stringify(encoded_images));
+  if(index < 0 || index >= images.length){
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end("index out of range");
+    return;
+  }
+  res.writeHead(200, { "Content-Type": "image/png" });
+  const images_info = images.map((img) => {
+    return {
+      image: img,
+      time: fs.statSync(img).mtime,
+    };
+  }).sort((a, b) => a.time - b.time);
+  const image = images_info[index].image;
+  res.end(fs.readFileSync(image));
 });
 
 
