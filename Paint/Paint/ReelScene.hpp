@@ -29,4 +29,6 @@ private:
 	int reel_random_amplitude = 2000;
 	// お絵かきシーンに移行するまでの時間
 	Duration sleep_time = 2.5s;
+	// イージング関数
+	double easing(const double &t);
 };

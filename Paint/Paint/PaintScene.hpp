@@ -20,8 +20,9 @@ public:
 	void update(void);
 private:
 	Image image;
+	Image image_monochrome;
 	// BFSの探索用に使用する
-	Image image_nochange;
+	Image image_nopaint;
 	DynamicTexture texture;
 	Point texture_center = Scene::Center();
 	// 座標が画像のサイズに収まっているか

@@ -19,7 +19,7 @@ void ReelScene::update(void) {
 		stopwatch.start();
 	}
 	// イージング一覧 https://easings.net/
-	const double move_speed_rate = 1.0 - EaseInOutElastic(Min((double)stopwatch.ms() / move_time_ms, 1.0));
+	const double move_speed_rate = 1.0 - easing(Min((double)stopwatch.ms() / move_time_ms, 1.0));
 	// イージングに合わせてtextureの中心位置を移動
 	for (std::pair<Texture, Vec2> &p : line_drawings) {
 		p.second.moveBy(max_move_speed * move_speed_rate * Scene::DeltaTime());
@@ -48,5 +48,18 @@ void ReelScene::draw(void) const {
 	}
 }
 
+// https://easings.net/ja#easeInOutElastic
+double ReelScene::easing(const double &t){
+	const double c = (2 * Math::Pi) / 4.5;
+	if (t == 0) {
+		return 0;
+	}else if (t == 1) {
+		return 1;
+	}else if(t < 0.5){
+		return -(Math::Pow(2, 20 * t - 10) * Math::Sin((20 * t - 11.125) * c)) / 2;
+	}else{
+		return (Math::Pow(2, -20 * t + 10) * Math::Sin((20 * t - 11.125) * c)) / 2 + 1;
+	}
+}
 
 
