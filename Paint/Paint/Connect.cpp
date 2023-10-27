@@ -29,16 +29,17 @@ String Connect::encode_file(const FilePath &filepath){
 
 
 
-void Connect::post_image(const Image &image){
+void Connect::post_image(const Image &image, const String &image_type){
 	image.savePNG(save_png_path);
-	this->post_image(save_png_path);
+	this->post_image(save_png_path, image_type);
 }
 
-void Connect::post_image(const FilePath &filepath){
+void Connect::post_image(const FilePath &filepath, const String &image_type){
 	URL url = url_base + U"uploadImages?token=" + token;
 	const String encoded_file = encode_file(filepath);
 	const std::string data = JSON{
-		{ U"image", encoded_file }
+		{ U"image", encoded_file },
+		{ U"type", image_type },
 	}.formatUTF8();
 	if (const auto response = SimpleHTTP::Post(url, headers, data.data(), data.size(), save_response_path)) {
 		if (response.isOK()) {

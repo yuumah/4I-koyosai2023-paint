@@ -5,11 +5,12 @@
 # include "Connect.hpp"
 
 PaintScene::PaintScene(const InitData& init) : IScene( init ) {
-	initialize(getData().get_path());
+	initialize(getData().get_path(), getData().get_image_type());
 }
 
-void PaintScene::initialize(const FilePath& path) {
+void PaintScene::initialize(const FilePath& path, const String &img_type) {
 	set_image(path);
+	image_type = img_type;
 	visited.resize(image.height(), Array<bool>(image.width(), false));
 	update_texture();
 	stopwach.start();
@@ -112,7 +113,7 @@ void PaintScene::update(void) {
 	// ボタンが押されるか、時間制限を超えていたら
 	if (SimpleGUI::Button(U"完成！", Vec2{Scene::Center().x * 1.5, Scene::Center().y}, unspecified) or stopwach.ms() > time_limit_ms) {
 		stopwach.reset();
-		connect.post_image(this->image);
+		connect.post_image(this->image, image_type);
 		changeScene(U"ReelScene");
 		return;
 	}

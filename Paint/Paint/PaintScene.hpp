@@ -10,7 +10,7 @@ const Array<Point> dydx = { {1,0},{0,-1},{-1,0},{0,1} };
 class PaintScene : public App::Scene{
 public:
 	PaintScene(const InitData &init);
-	void initialize(const FilePath &path);
+	void initialize(const FilePath &path, const String &img_type);
 	void set_image(const FilePath &path);
 	Image& get_image(void);
 	void update_texture(void);
@@ -25,6 +25,7 @@ private:
 	Image image_nopaint;
 	DynamicTexture texture;
 	Point texture_center = Scene::Center();
+	String image_type;
 	// 座標が画像のサイズに収まっているか
 	bool is_in_image(const Point &point) const;
 	// BFSで塗りつぶし領域を走査

@@ -6,8 +6,14 @@ Data::Data(void) {}
 void Data::set_path(const FilePath &path){
 	this->path = path;
 }
-FilePath Data::get_path(void) {
+void Data::set_image_type(const String& type) {
+	this->image_type = type;
+}
+const FilePath &Data::get_path(void) const {
 	return this->path;
+}
+const String &Data::get_image_type(void) const {
+	return this->image_type;
 }
 
 

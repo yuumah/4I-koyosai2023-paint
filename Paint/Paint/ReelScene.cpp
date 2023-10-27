@@ -35,6 +35,7 @@ ReelScene::ReelScene(const InitData &init) :IScene( init ) {
 	const std::pair<int,int> range = DiscreteSample(image_type_range, distribution);
 	const LineDrawing selected_drawing = line_drawings[Random(range.first, range.second-1)];
 	getData().set_path(selected_drawing.path);
+	getData().set_image_type(selected_drawing.type);
 	//Print << U"selected: " << selected_drawing.type << U" " << selected_drawing.index;
 	const int start_pos = selected_drawing.index + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
 	for (LineDrawing &p : line_drawings) {

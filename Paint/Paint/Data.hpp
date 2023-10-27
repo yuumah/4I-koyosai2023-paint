@@ -6,15 +6,15 @@ class Data {
 public:
 	Data(void);
 	void set_path(const FilePath &path);
-	FilePath get_path(void);
+	void set_image_type(const String &type);
+	const FilePath &get_path(void) const;
+	const String &get_image_type(void) const;
 private:
 	FilePath path;
+	String image_type;
 };
 
 // RGBの値の平均値で出す
 Color to_monochrome(const Color &color);
 
 using App = SceneManager<String, Data>;
-
-
-
