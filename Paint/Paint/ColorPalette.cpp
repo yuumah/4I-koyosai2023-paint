@@ -9,15 +9,15 @@ Color ColorPalette::get_color(void) const {
 }
 
 void ColorPalette::update_gui(void){
-	const ColorF colorf((double)this->color.r/255.0, (double)this->color.g / 255.0, (double)this->color.b / 255.0);
+	ColorF colorf((double)this->color.r/255.0, (double)this->color.g / 255.0, (double)this->color.b / 255.0);
 	if(SimpleGUI::Slider(U"Red:     {:>3}"_fmt(colorf.r*255), colorf.r, gui_leftup, gui_label_width, gui_size.x)){
-		this->color.r = colorf.r * 255;
+		this->color.r = (int)(colorf.r * 255);
 	}
 	if(SimpleGUI::Slider(U"Green: {:>3}"_fmt(colorf.g*255), colorf.g, Vec2(gui_leftup.x, gui_leftup.y + gui_size.y * 1 / 2), gui_label_width, gui_size.x)){
-		this->color.g = colorf.g * 255;
+		this->color.g = (int)(colorf.g * 255);
 	}
 	if(SimpleGUI::Slider(U"Blue:    {:>3}"_fmt(colorf.b*255), colorf.b, Vec2(gui_leftup.x, gui_leftup.y + gui_size.y * 2 / 2), gui_label_width, gui_size.x)){
-		this->color.b = colorf.b * 255;
+		this->color.b = (int)(colorf.b * 255);
 	}
 }
 
@@ -27,7 +27,6 @@ void ColorPalette::draw_circle(void) const {
 
 void ColorPalette::update(void){
 	update_gui();
-
 }
 void ColorPalette::draw(void) const {
 	draw_circle();
