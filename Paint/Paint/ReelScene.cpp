@@ -2,16 +2,48 @@
 # include "ReelScene.hpp"
 
 ReelScene::ReelScene(const InitData &init) :IScene( init ) {
-	int i = 0;
-	for (const String &path : FileSystem::DirectoryContents(U"line_drawing")){
-		Texture texture = Texture(path);
-		Vec2 point = Vec2{ i++ * (texture.size().x * scaled_rate + texture_blank), Scene::Center().y };
-		assert(texture.size() == original_texture_size);
-		line_drawings << std::make_pair(Texture(path), point);
-		pathes << path;
+	const CSV csv{ U"line_drawing.csv" };
+	if (not csv) {
+		throw Error{ U"Failed to load `line_drawing.csv`" };
 	}
-	move_time_ms += Random(-reel_random_amplitude, reel_random_amplitude);
-	reel_length = (original_texture_size.x * scaled_rate + texture_blank) * (line_drawings.size());
+	HashTable<String, double> weight_table;
+	for (int i = 0; i < (int)csv.rows(); i++) {
+		assert(csv[i].size() == 2);
+		weight_table[csv[i][0]] = Parse<double>(csv[i][1]);
+	}
+	Array<std::pair<int, int>> image_type_range;
+	Array<double> weights;
+	int index = 0;
+	for (const String &directory : FileSystem::DirectoryContents(U"line_drawing", Recursive::No)) {
+		if(!FileSystem::IsDirectory(directory)) continue;
+
+		const String image_type = FileSystem::FileName(directory);
+		const int cur = index;
+		for (const String &path : FileSystem::DirectoryContents(directory)) {
+			const Texture texture = Texture(path);
+			const Vec2 point(index * (texture.size().x * scaled_rate + texture_blank), Scene::Center().y);
+			assert(texture.size() == original_texture_size);
+			line_drawings.emplace_back(texture, path, point, image_type, index);
+			index++;
+		}
+		weights.push_back(weight_table[image_type]);
+		image_type_range.emplace_back(cur, index);
+	}
+	reel_length = (original_texture_size.x * scaled_rate + texture_blank) * line_drawings.size();
+	// 開始位置をランダムに調整
+	DiscreteDistribution distribution(weights);
+	const std::pair<int,int> range = DiscreteSample(image_type_range, distribution);
+	const LineDrawing selected_drawing = line_drawings[Random(range.first, range.second-1)];
+	getData().set_path(selected_drawing.path);
+	//Print << U"selected: " << selected_drawing.type << U" " << selected_drawing.index;
+	const int start_pos = selected_drawing.index + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
+	for (LineDrawing &p : line_drawings) {
+		p.pos.moveBy(Vec2((-start_pos * (p.texture.size().x * scaled_rate + texture_blank)) + 50, 0));
+		// 左端まで来たら右端に移動させる
+		while (p.pos.x < Scene::Center().x - reel_length / 2) {
+			p.pos.x += reel_length;
+		}
+	}
 }
 
 void ReelScene::update(void) {
@@ -21,30 +53,32 @@ void ReelScene::update(void) {
 	// イージング一覧 https://easings.net/
 	const double move_speed_rate = 1.0 - easing(Min((double)stopwatch.ms() / move_time_ms, 1.0));
 	// イージングに合わせてtextureの中心位置を移動
-	for (std::pair<Texture, Vec2> &p : line_drawings) {
-		p.second.moveBy(max_move_speed * move_speed_rate * Scene::DeltaTime());
+	for (LineDrawing &p : line_drawings) {
+		p.pos.moveBy(max_move_speed * move_speed_rate * Scene::DeltaTime());
 		// 左端まで来たら右端に移動させる
-		if (p.second.x < Scene::Center().x - reel_length/2) {
-			p.second.x = Scene::Center().x + reel_length/2;
+		if (p.pos.x < Scene::Center().x - reel_length/2) {
+			p.pos.x += reel_length;
+		}
+		if (p.pos.x > Scene::Center().x + reel_length / 2) {
+			p.pos.x -= reel_length;
 		}
 	}
 	// リールが止まったら
 	if (stopwatch.ms() >= move_time_ms) {
-		std::pair<Vec2, int> picked_vec2_idx = {line_drawings[0].second, 0};
+		std::pair<Vec2, int> picked_vec2_idx = {line_drawings[0].pos, 0};
 		for(int i = 1; i < line_drawings.size(); i++){
-			if (Abs(picked_vec2_idx.first.x - Scene::Center().x) > Abs(line_drawings[i].second.x - Scene::Center().x)) {
-				picked_vec2_idx = {line_drawings[i].second, i};
+			if (Abs(picked_vec2_idx.first.x - Scene::Center().x) > Abs(line_drawings[i].pos.x - Scene::Center().x)) {
+				picked_vec2_idx = {line_drawings[i].pos, i};
 			}
 		}
-		getData().set_path(pathes[picked_vec2_idx.second]);
 		System::Sleep(sleep_time);
 		changeScene(U"PaintScene", 1.0s);
 	}
 }
 
 void ReelScene::draw(void) const {
-	for (const std::pair<Texture, Vec2> &p : line_drawings) {
-		p.first.scaled(scaled_rate).drawAt(p.second);
+	for (const LineDrawing &p : line_drawings) {
+		p.texture.scaled(scaled_rate).drawAt(p.pos);
 	}
 }
 
