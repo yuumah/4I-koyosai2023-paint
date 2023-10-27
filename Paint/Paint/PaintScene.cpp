@@ -16,27 +16,27 @@ void PaintScene::initialize(const FilePath &path, const String &img_type){
 	stopwach.start();
 }
 
-void PaintScene::set_image(const FilePath& path){
+void PaintScene::set_image(const FilePath &path){
 	this->image = Image(path);
 	this->image_monochrome = Image(path);
 	this->image_nopaint = Image(path);
 }
-Image& PaintScene::get_image(void){
+Image &PaintScene::get_image(void){
 	return this->image;
 }
 
-void PaintScene::update_texture(const Image &image){
-	texture.fill(image);
+void PaintScene::update_texture(const Image &img){
+	texture.fill(img);
 }
 void PaintScene::update_texture(void){
-	texture.fill(image);
+	texture.fill(this->image);
 }
 
 DynamicTexture &PaintScene::get_texture(void){
 	return this->texture;
 }
 
-bool PaintScene::is_in_image(const Point& point) const{
+bool PaintScene::is_in_image(const Point &point) const{
 	return (0 <= point.y and point.y < image.height() and 0 <= point.x and point.x < image.width());
 }
 
@@ -46,14 +46,14 @@ void PaintScene::bfs_bucket(const Point &start){
 	std::queue<Point> que;
 	que.push(start);
 	while(not que.empty()){
-		Point now = que.front();
+		const Point now = que.front();
+		que.pop();
 		// 画面の四隅に到着したらBFSをなかったことにする
-		if(now == Point(0, 0) or now == Point(image_nopaint.height(), 0) or now == Point(0, image_nopaint.width()) or now == Point(image_nopaint.height(), image_nopaint.width())){
+		if(now == Point(0, 0) or now == Point(image_nopaint.height()-1, 0) or now == Point(0, image_nopaint.width()-1) or now == Point(image_nopaint.height()-1, image_nopaint.width()-1)){
 			visited.clear();
 			visited.resize(image_nopaint.height(), Array<bool>(image_nopaint.width(), false));
 			break;
 		}
-		que.pop();
 		for(const Point &delta : dydx){
 			const Point next = now + delta;
 			if(is_in_image(next) and (not visited[next.y][next.x])){
@@ -100,7 +100,7 @@ void PaintScene::draw_canpus_rectframe(void) const {
 }
 
 void PaintScene::draw_progress_bar(void) const {
-	ProgressBar({ 0,0 }, 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwach.ms(), time_limit_ms);
+	ProgressBar(Point(0,0), 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwach.ms(), time_limit_ms);
 }
 
 void PaintScene::draw(void) const {
@@ -119,7 +119,7 @@ void PaintScene::update(void){
 	}
 	colorpalette.update();
 	texture_center = Scene::Center();
-	Optional<Point> pos_clicked_scene = get_mousel_pos_pressed();
+	const Optional<Point> pos_clicked_scene = get_mousel_pos_pressed();
 	Optional<Point> pos_clicked_image;
 	if(pos_clicked_scene.has_value()){
 		pos_clicked_image = scenepos_to_imagepos(pos_clicked_scene.value());

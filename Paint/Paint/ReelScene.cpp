@@ -1,7 +1,31 @@
-﻿# include <Siv3D.hpp> // Siv3D v0.6.12
+﻿# pragma once
+# include <Siv3D.hpp> // Siv3D v0.6.12
 # include "ReelScene.hpp"
 
-ReelScene::ReelScene(const InitData &init) :IScene(init){
+
+const Texture &LineDrawing::get_texture() const {
+	return texture;
+}
+const String &LineDrawing::get_path() const {
+	return path;
+}
+const Vec2 &LineDrawing::get_pos() const {
+	return pos;
+}
+const double LineDrawing::get_posx() const {
+	return pos.x;
+}
+const String &LineDrawing::get_type() const {
+	return type;
+}
+const int LineDrawing::get_index() const {
+	return index;
+}
+void LineDrawing::move_posx(const double d){
+	pos.x += d;
+}
+
+ReelScene::ReelScene(const InitData &init) : IScene(init){
 	const CSV csv(U"line_drawing.csv");
 	if(not csv){
 		throw Error(U"Failed to load `line_drawing.csv`");
@@ -29,20 +53,20 @@ ReelScene::ReelScene(const InitData &init) :IScene(init){
 		weights.push_back(weight_table[image_type]);
 		image_type_range.emplace_back(cur, index);
 	}
-	reel_length = (original_texture_size.x * scaled_rate + texture_blank) * line_drawings.size();
+	reel_length = (int)((original_texture_size.x * scaled_rate + texture_blank) * line_drawings.size());
 	// 開始位置をランダムに調整
 	DiscreteDistribution distribution(weights);
 	const std::pair<int,int> range = DiscreteSample(image_type_range, distribution);
 	const LineDrawing selected_drawing = line_drawings[Random(range.first, range.second-1)];
-	getData().set_path(selected_drawing.path);
-	getData().set_image_type(selected_drawing.type);
+	getData().set_path(selected_drawing.get_path());
+	getData().set_image_type(selected_drawing.get_type());
 	//Print << U"selected: " << selected_drawing.type << U" " << selected_drawing.index;
-	const int start_pos = selected_drawing.index + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
+	const int start_pos = selected_drawing.get_index() + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
 	for(LineDrawing &p : line_drawings){
-		p.pos.moveBy(Vec2((-start_pos * (p.texture.size().x * scaled_rate + texture_blank)) + 50, 0));
+		p.move_posx(-start_pos * (p.get_texture().size().x * scaled_rate + texture_blank) + 50);
 		// 左端まで来たら右端に移動させる
-		while(p.pos.x < Scene::Center().x - reel_length / 2){
-			p.pos.x += reel_length;
+		while(p.get_pos().x < Scene::Center().x - reel_length/2){
+			p.move_posx(reel_length);
 		}
 	}
 }
@@ -55,23 +79,17 @@ void ReelScene::update(void){
 	const double move_speed_rate = 1.0 - easing(Min((double)stopwatch.ms() / move_time_ms, 1.0));
 	// イージングに合わせてtextureの中心位置を移動
 	for(LineDrawing &p : line_drawings){
-		p.pos.moveBy(max_move_speed * move_speed_rate * Scene::DeltaTime());
+		p.move_posx(max_move_speed * move_speed_rate * Scene::DeltaTime());
 		// 左端まで来たら右端に移動させる
-		if(p.pos.x < Scene::Center().x - reel_length/2){
-			p.pos.x += reel_length;
+		if(p.get_posx() < Scene::Center().x - reel_length/2){
+			p.move_posx(reel_length);
 		}
-		if(p.pos.x > Scene::Center().x + reel_length / 2){
-			p.pos.x -= reel_length;
+		if(p.get_posx() > Scene::Center().x + reel_length/2){
+			p.move_posx(-reel_length);
 		}
 	}
 	// リールが止まったら
 	if(stopwatch.ms() >= move_time_ms){
-		std::pair<Vec2, int> picked_vec2_idx = {line_drawings[0].pos, 0};
-		for(int i = 1; i < line_drawings.size(); i++){
-			if(Abs(picked_vec2_idx.first.x - Scene::Center().x) > Abs(line_drawings[i].pos.x - Scene::Center().x)){
-				picked_vec2_idx = {line_drawings[i].pos, i};
-			}
-		}
 		System::Sleep(sleep_time);
 		changeScene(U"PaintScene", 1.0s);
 	}
@@ -79,12 +97,12 @@ void ReelScene::update(void){
 
 void ReelScene::draw(void) const {
 	for(const LineDrawing &p : line_drawings){
-		p.texture.scaled(scaled_rate).drawAt(p.pos);
+		p.get_texture().scaled(scaled_rate).drawAt(p.get_pos());
 	}
 }
 
 // https://easings.net/ja#easeInOutElastic
-double ReelScene::easing(const double &t){
+double ReelScene::easing(const double &t) const {
 	const double c = (2 * Math::Pi) / 4.5;
 	if(t == 0){
 		return 0;
