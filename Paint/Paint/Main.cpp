@@ -14,9 +14,9 @@ void Main(){
 	manager.add<ReelScene>(U"ReelScene");
 	manager.add<PaintScene>(U"PaintScene");
 
-	manager.init(U"ReelScene");	
-	while (System::Update()) {
-		if (not manager.update()) {
+	manager.init(U"ReelScene");
+	while(System::Update()){
+		if(not manager.update()){
 			break;
 		}
 	}

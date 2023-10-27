@@ -1,25 +1,25 @@
 ﻿# include <Siv3D.hpp> // Siv3D v0.6.12
 # include "ReelScene.hpp"
 
-ReelScene::ReelScene(const InitData &init) :IScene( init ) {
-	const CSV csv{ U"line_drawing.csv" };
-	if (not csv) {
-		throw Error{ U"Failed to load `line_drawing.csv`" };
+ReelScene::ReelScene(const InitData &init) :IScene(init){
+	const CSV csv(U"line_drawing.csv");
+	if(not csv){
+		throw Error(U"Failed to load `line_drawing.csv`");
 	}
 	HashTable<String, double> weight_table;
-	for (int i = 0; i < (int)csv.rows(); i++) {
+	for(int i = 0; i < (int)csv.rows(); i++){
 		assert(csv[i].size() == 2);
 		weight_table[csv[i][0]] = Parse<double>(csv[i][1]);
 	}
 	Array<std::pair<int, int>> image_type_range;
 	Array<double> weights;
 	int index = 0;
-	for (const String &directory : FileSystem::DirectoryContents(U"line_drawing", Recursive::No)) {
+	for(const String &directory : FileSystem::DirectoryContents(U"line_drawing", Recursive::No)){
 		if(!FileSystem::IsDirectory(directory)) continue;
 
 		const String image_type = FileSystem::FileName(directory);
 		const int cur = index;
-		for (const String &path : FileSystem::DirectoryContents(directory)) {
+		for(const String &path : FileSystem::DirectoryContents(directory)){
 			const Texture texture = Texture(path);
 			const Vec2 point(index * (texture.size().x * scaled_rate + texture_blank), Scene::Center().y);
 			assert(texture.size() == original_texture_size);
@@ -38,37 +38,37 @@ ReelScene::ReelScene(const InitData &init) :IScene( init ) {
 	getData().set_image_type(selected_drawing.type);
 	//Print << U"selected: " << selected_drawing.type << U" " << selected_drawing.index;
 	const int start_pos = selected_drawing.index + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
-	for (LineDrawing &p : line_drawings) {
+	for(LineDrawing &p : line_drawings){
 		p.pos.moveBy(Vec2((-start_pos * (p.texture.size().x * scaled_rate + texture_blank)) + 50, 0));
 		// 左端まで来たら右端に移動させる
-		while (p.pos.x < Scene::Center().x - reel_length / 2) {
+		while(p.pos.x < Scene::Center().x - reel_length / 2){
 			p.pos.x += reel_length;
 		}
 	}
 }
 
-void ReelScene::update(void) {
-	if (not stopwatch.isStarted()) {
+void ReelScene::update(void){
+	if(not stopwatch.isStarted()){
 		stopwatch.start();
 	}
 	// イージング一覧 https://easings.net/
 	const double move_speed_rate = 1.0 - easing(Min((double)stopwatch.ms() / move_time_ms, 1.0));
 	// イージングに合わせてtextureの中心位置を移動
-	for (LineDrawing &p : line_drawings) {
+	for(LineDrawing &p : line_drawings){
 		p.pos.moveBy(max_move_speed * move_speed_rate * Scene::DeltaTime());
 		// 左端まで来たら右端に移動させる
-		if (p.pos.x < Scene::Center().x - reel_length/2) {
+		if(p.pos.x < Scene::Center().x - reel_length/2){
 			p.pos.x += reel_length;
 		}
-		if (p.pos.x > Scene::Center().x + reel_length / 2) {
+		if(p.pos.x > Scene::Center().x + reel_length / 2){
 			p.pos.x -= reel_length;
 		}
 	}
 	// リールが止まったら
-	if (stopwatch.ms() >= move_time_ms) {
+	if(stopwatch.ms() >= move_time_ms){
 		std::pair<Vec2, int> picked_vec2_idx = {line_drawings[0].pos, 0};
 		for(int i = 1; i < line_drawings.size(); i++){
-			if (Abs(picked_vec2_idx.first.x - Scene::Center().x) > Abs(line_drawings[i].pos.x - Scene::Center().x)) {
+			if(Abs(picked_vec2_idx.first.x - Scene::Center().x) > Abs(line_drawings[i].pos.x - Scene::Center().x)){
 				picked_vec2_idx = {line_drawings[i].pos, i};
 			}
 		}
@@ -78,7 +78,7 @@ void ReelScene::update(void) {
 }
 
 void ReelScene::draw(void) const {
-	for (const LineDrawing &p : line_drawings) {
+	for(const LineDrawing &p : line_drawings){
 		p.texture.scaled(scaled_rate).drawAt(p.pos);
 	}
 }
@@ -86,9 +86,9 @@ void ReelScene::draw(void) const {
 // https://easings.net/ja#easeInOutElastic
 double ReelScene::easing(const double &t){
 	const double c = (2 * Math::Pi) / 4.5;
-	if (t == 0) {
+	if(t == 0){
 		return 0;
-	}else if (t == 1) {
+	}else if(t == 1){
 		return 1;
 	}else if(t < 0.5){
 		return -(Math::Pow(2, 20 * t - 10) * Math::Sin((20 * t - 11.125) * c)) / 2;
@@ -96,5 +96,3 @@ double ReelScene::easing(const double &t){
 		return (Math::Pow(2, -20 * t + 10) * Math::Sin((20 * t - 11.125) * c)) / 2 + 1;
 	}
 }
-
-

@@ -2,11 +2,11 @@
 # include <Siv3D.hpp> // Siv3D v0.6.12
 # include "Data.hpp"
 
-Data::Data(void) {}
+Data::Data(void){}
 void Data::set_path(const FilePath &path){
 	this->path = path;
 }
-void Data::set_image_type(const String& type) {
+void Data::set_image_type(const String& type){
 	this->image_type = type;
 }
 const FilePath &Data::get_path(void) const {

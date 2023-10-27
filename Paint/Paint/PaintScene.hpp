@@ -7,15 +7,15 @@
 
 const Array<Point> dydx = { {1,0},{0,-1},{-1,0},{0,1} };
 
-class PaintScene : public App::Scene{
+class PaintScene : public App::Scene {
 public:
 	PaintScene(const InitData &init);
 	void initialize(const FilePath &path, const String &img_type);
 	void set_image(const FilePath &path);
-	Image& get_image(void);
+	Image &get_image(void);
 	void update_texture(void);
 	void update_texture(const Image &image);
-	DynamicTexture& get_texture(void);
+	DynamicTexture &get_texture(void);
 	void draw(void) const;
 	void update(void);
 private:
@@ -49,7 +49,3 @@ private:
 	// 接続用
 	Connect connect;
 };
-
-
-
-
