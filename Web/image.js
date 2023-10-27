@@ -51,6 +51,6 @@ let randomImage = document.getElementsByClassName("ballon");
 for (let i = 0; i < randomImage.length; i++) {
     let randomX = Math.floor(Math.random() * 95); 
     let randomY = Math.floor(Math.random() * 20); 
-    randomImage2[i].style.left = randomX + "%";
-    randomImage2[i].style.top = randomY + "%";
+    randomImage[i].style.left = randomX + "%";
+    randomImage[i].style.top = randomY + "%";
 }
