@@ -1,5 +1,6 @@
 let index = 0;
 let repeatCount = 5;
+let previousImage = null;
 
 function loadImage(index) {
 	return new Promise((resolve, reject) => {
@@ -12,11 +13,15 @@ function loadImage(index) {
 			let randomY = Math.floor(Math.random() * 50) + 35; 
 			img.style.left = randomX + "%";
 			img.style.top = randomY + "%";
+      img.width = "100";
 			document.body.appendChild(img); // 画像を表示
+      previousImage = img;
 			resolve(index); // 画像の読み込みが成功した場合
 		};
 	
 		img.onerror = () => {
+      previousImage.width = "150";
+      document.body.appendChild(previousImage); // 画像を表示
 			reject(index); // 画像の読み込みが失敗した場合
 		};
 	});
@@ -65,15 +70,11 @@ for (let i = 0; i < repeatCount; i++) {
   img.id = "balloon" + i + "";
   img.src = "http://tk2-233-26371.vs.sakura.ne.jp:7000/images?type=balloon&index=0";
   img.width = "100";
-  document.body.appendChild(img);
-}
-
-for (let i = 0; i < repeatCount; i++) {
-  let Element = document.getElementById("balloon" + i + "");
   let randomX = Math.floor(Math.random() * 95);
   let randomY = Math.floor(Math.random() * 20);
-  Element.style.left = randomX + "%";
-  Element.style.top = randomY + "%";
+  img.style.left = randomX + "%";
+  img.style.top = randomY + "%";
+  document.body.appendChild(img);
 }
 
 loadImages();

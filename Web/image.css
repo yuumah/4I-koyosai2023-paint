@@ -11,7 +11,6 @@ img {
 }
 
 .flower {
-  width: 100px;
   animation: shake 3s ease infinite;
 }
 /* アニメーションを適用する要素にスタイルを追加 */
