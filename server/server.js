@@ -9,7 +9,9 @@ app.use(bodyParser.urlencoded({ limit: "8mb", extended: true }));
 app.use(bodyParser.json());
 
 const token = require("./token.json").token;
-const image_types = ["flower", "butterfly", "elephant", "turtle"];
+const image_types = glob.sync("images/*").map((path) => {
+  return path.substring(path.indexOf("/")+1);
+});
 
 app.get("/", (req, res) => {
   res.writeHead(200, { "Content-Type": "text/html" });
