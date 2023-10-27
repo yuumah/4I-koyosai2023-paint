@@ -18,6 +18,5 @@ const String &Data::get_image_type(void) const {
 
 
 Color to_monochrome(const Color &color){
-	int total = color.r + color.g + color.b;
-	return Color(total / 3);
+	return Color(color.r*0.30 + color.g*0.59 + color.b*0.11);
 }
