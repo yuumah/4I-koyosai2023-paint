@@ -1,12 +1,13 @@
 let index = 0;
-let repeatCount = 5;
+let repeatCount = 30;
 let previousImage = null;
+let balloons = [];
 
 function loadImage(index) {
 	return new Promise((resolve, reject) => {
 		let img = document.createElement("img");
 		img.className = "flower";
-		img.src = "http://tk2-233-26371.vs.sakura.ne.jp:7000/images?type=flower&index=" + index + "";
+		img.src = "http://tk2-233-26371.vs.sakura.ne.jp:7000/images?type=flower&index=" + index;
 	
 		img.onload = () => {
 			let randomX = Math.floor(Math.random() * 95);  
@@ -21,7 +22,6 @@ function loadImage(index) {
 	
 		img.onerror = () => {
       previousImage.width = "150";
-      document.body.appendChild(previousImage); // 画像を表示
 			reject(index); // 画像の読み込みが失敗した場合
 		};
 	});
@@ -32,7 +32,6 @@ async function loadImages() {
     try {
       await loadImage(index);
     } catch (errorIndex) {
-      console.log("画像の読み込みに失敗しました：" + errorIndex);
       break;
     }
     index++;
@@ -42,27 +41,19 @@ async function loadImages() {
 }
 
 function moveImage() {
-  let image = document.getElementById("balloon" + index + "");
-  if (!image) {
-    index = 0;
-    image = document.getElementById("balloon" + index + "");
-  }
 
-  let positionX = (image.offsetLeft / window.innerWidth) * 100;
-  positionX += 0.3;
-  image.style.left = positionX + '%';
-
-  if (positionX < 93) {
-    index++;
-    if (index >= repeatCount) {
-      index = 0;
+  let leftArray = balloons.map(item => (item.offsetLeft / window.innerWidth) * 100);
+  let modifiedArray = leftArray.map(item => item + 0.3);
+  const indexArrayGreaterThan93 = modifiedArray.map((item, index) => item >= 93 ? index : -1).filter(index => index !== -1);
+  balloons.forEach((balloon, index) => {
+    balloon.style.left = modifiedArray[index] + "%";
+  });
+  if(indexArrayGreaterThan93.length > 0){
+    for(const index of indexArrayGreaterThan93){
+      balloons[index].style.left = "0%";
     }
-    requestAnimationFrame(moveImage);
   }
-  else {
-    image.style.left = "0%";
-    moveImage();
-  }
+  setTimeout(moveImage, 50);
 }
 
 for (let i = 0; i < repeatCount; i++) {
@@ -75,6 +66,7 @@ for (let i = 0; i < repeatCount; i++) {
   img.style.left = randomX + "%";
   img.style.top = randomY + "%";
   document.body.appendChild(img);
+  balloons.push(img);
 }
 
-loadImages();
+setTimeout(loadImages, 50);
