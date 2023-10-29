@@ -2,6 +2,7 @@
 # include "PaintScene.hpp"
 # include "ColorPalette.hpp"
 # include "ReelScene.hpp"
+# include "CompleteScene.hpp"
 # include "Data.hpp"
 
 
@@ -13,6 +14,7 @@ void Main(){
 	App manager;
 	manager.add<ReelScene>(U"ReelScene");
 	manager.add<PaintScene>(U"PaintScene");
+	manager.add<CompleteScene>(U"CompleteScene");
 
 	manager.init(U"ReelScene");
 	while(System::Update()){
