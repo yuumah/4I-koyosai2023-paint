@@ -23,3 +23,5 @@ node server.js
 - body-parser
 
 - glob
+
+- urlsafe-base64
