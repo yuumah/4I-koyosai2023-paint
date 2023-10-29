@@ -13,7 +13,7 @@ void PaintScene::initialize(const FilePath &path, const String &img_type){
 	image_type = img_type;
 	visited.resize(image.height(), Array<bool>(image.width(), false));
 	update_texture();
-	stopwach.start();
+	stopwatch.start();
 }
 
 void PaintScene::set_image(const FilePath &path){
@@ -107,7 +107,7 @@ void PaintScene::finish_drawing(void){
 	stopwatch.reset();
 	connect.post_image(this->image, image_type);
 	getData().set_completed_image(this->image);
-	changeScene(U"ReelScene");
+	changeScene(U"CompleteScene");
 }
 
 void PaintScene::draw(void) const {
