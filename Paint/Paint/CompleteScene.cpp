@@ -6,7 +6,6 @@ CompleteScene::CompleteScene(const InitData &init) : IScene(init){
 	const Image &image = getData().get_completed_image();
 	texture = Texture(image);
 	stopwatch.start();
-	Print << U"called";
 }
 
 void CompleteScene::draw(void) const {
@@ -15,7 +14,7 @@ void CompleteScene::draw(void) const {
 
 void CompleteScene::update(void){
 	if(stopwatch.s() > display_time){
-		changeScene(U"ReelScene");
+		changeScene(U"StartScene");
 		return;
 	}
 }
