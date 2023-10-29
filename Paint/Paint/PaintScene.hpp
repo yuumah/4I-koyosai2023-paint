@@ -41,11 +41,13 @@ private:
 	void draw_canpus_rectframe(void) const;
 	// プログレスバーの表示
 	void draw_progress_bar(void) const;
+	// 完成or終了時の処理
+	void finish_drawing(void);
 	// カラーパレット
 	ColorPalette colorpalette;
 	// 時間制限
-	Stopwatch stopwach;
-	int time_limit_ms = 10000;
+	Stopwatch stopwatch;
+	const int time_limit_ms = 120 * 1000;
 	// 接続用
 	Connect connect;
 };

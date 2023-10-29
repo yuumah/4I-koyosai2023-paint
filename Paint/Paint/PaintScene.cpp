@@ -100,7 +100,14 @@ void PaintScene::draw_canpus_rectframe(void) const {
 }
 
 void PaintScene::draw_progress_bar(void) const {
-	ProgressBar(Point(0,0), 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwach.ms(), time_limit_ms);
+	ProgressBar(Point(0,0), 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwatch.ms(), time_limit_ms);
+}
+
+void PaintScene::finish_drawing(void){
+	stopwatch.reset();
+	connect.post_image(this->image, image_type);
+	getData().set_completed_image(this->image);
+	changeScene(U"ReelScene");
 }
 
 void PaintScene::draw(void) const {
@@ -111,10 +118,8 @@ void PaintScene::draw(void) const {
 }
 void PaintScene::update(void){
 	// ボタンが押されるか、時間制限を超えていたら
-	if(SimpleGUI::Button(U"完成！", Vec2(Scene::Center().x * 1.5, Scene::Center().y), unspecified) or stopwach.ms() > time_limit_ms){
-		stopwach.reset();
-		connect.post_image(this->image, image_type);
-		changeScene(U"ReelScene");
+	if(SimpleGUI::Button(U"完成！！！", Vec2(Scene::Center().x * 1.5, Scene::Center().y), unspecified) or stopwatch.ms() > time_limit_ms){
+		finish_drawing();
 		return;
 	}
 	colorpalette.update();
