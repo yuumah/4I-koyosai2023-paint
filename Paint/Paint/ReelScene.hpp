@@ -48,7 +48,7 @@ private:
 	// リールの長さ
 	int reel_length = 0;
 	// お絵かきシーンに移行するまでの時間
-	const Duration sleep_time = 2.0s;
+	const Duration sleep_time = 1.0s;
 	// イージング関数
 	double easing(const double &t) const;
 };
