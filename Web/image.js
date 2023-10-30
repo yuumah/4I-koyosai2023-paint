@@ -1,9 +1,9 @@
 let index = 0;
 let imgindex = 0;
 let repeatCount = 30;
-var previousImage = null;
+let previousImage = null;
 let balloons = [];
-let endindex = [];
+let endimages = [];
 let allimages = ["flower", "balloon", "turtle", "butterfly", "elephant"];
 let randomX = 0;
 let randomY = 0;
@@ -27,13 +27,18 @@ function loadImage(index) {
       img.style.top = randomY + "%";
       img.width = (allimages[imgindex] !== "elephant") ? "100" : "250";
       previousImage = img;
+      if (endimages.length > 3) endimages.shift();
+      endimages.push(img); 
       document.body.appendChild(img);
 			resolve(index); // 画像の読み込みが成功した場合
 		};
 	
 		img.onerror = () => {
-      if (previousImage !== null) {
-        previousImage.width = (allimages[imgindex] !== "elephant") ? "150" : "275";
+      if (endimages.length > 0 && endimages) {
+        for(const endimage of endimages){
+          endimage.width = (allimages[imgindex] !== "elephant") ? "150" : "275";
+        }
+        endimages = [];
       }
 			reject(index); // 画像の読み込みが失敗した場合
 		};
@@ -47,7 +52,6 @@ async function loadImages() {
     } catch (errorIndex) {
       if (imgindex < allimages.length - 1) {
         imgindex++;
-        endindex.push(index);
         index = 0;
         await loadImage(index);
       }
