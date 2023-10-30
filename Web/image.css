@@ -19,7 +19,7 @@ img {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(50px); /* 画像を上下に移動させる距離を設定 */
+    transform: translateY(-50px); /* 画像を上下に移動させる距離を設定 */
   }
   100% {
     transform: translateY(0);
