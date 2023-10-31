@@ -1,6 +1,7 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
 # include "ColorPalette.hpp"
+# include "Data.hpp"
 
 ColorPalette::ColorPalette(void){}
 
@@ -21,13 +22,13 @@ void ColorPalette::update_gui(void){
 	}
 }
 
-void ColorPalette::draw_circle(void) const {
-	Circle(Arg::topCenter(gui_leftup.x + gui_size.x / 2, gui_leftup.y + gui_size.y*1.5), 25).draw(this->color);
+void ColorPalette::draw_description(void)const {
+	font(description).drawAt(Vec2{Scene::Size().x * 8.5 / 10, Scene::Center().y}, to_monochrome(this->color));
 }
 
 void ColorPalette::update(void){
 	update_gui();
 }
 void ColorPalette::draw(void) const {
-	draw_circle();
+	draw_description();
 }

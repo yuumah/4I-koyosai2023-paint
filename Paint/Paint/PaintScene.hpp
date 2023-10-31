@@ -41,6 +41,15 @@ private:
 	void draw_canpus_rectframe(void) const;
 	// プログレスバーの表示
 	void draw_progress_bar(void) const;
+	// 完了ボタン
+	Font font{ 100, U"SourceHanSansJP-Medium.otf" };
+	Rect button_rect{ Scene::Size().x * 0.8, Scene::Size().y * 0.8, Scene::Size().x * 0.1, Scene::Size().y * 0.1 };
+	Rect draw_button_rect(Rect rect, HSV button_color, const HSV &shadow_color)const;
+	void draw_button_label(const String &label, const Rect &rect, const HSV &color)const;
+	// 説明の描画
+	void draw_description(void) const;
+	String description =
+		U"絵をクリックして塗りつぶし\n修正はできないよ！";
 	// 完成or終了時の処理
 	void finish_drawing(void);
 	// カラーパレット

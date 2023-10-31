@@ -6,7 +6,7 @@ StartScene::StartScene(const InitData &init) : IScene(init){
 }
 
 void StartScene::draw(void) const {
-	Rect rect = draw_button_rect(button_rect, button_hsv, button_shadow_hsv);
+	Rect rect = draw_button_rect(button_rect, to_monochrome(button_hsv), to_monochrome(button_shadow_hsv));
 	draw_button_label(U"開始", rect, Palette::White);
 }
 

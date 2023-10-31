@@ -103,6 +103,38 @@ void PaintScene::draw_progress_bar(void) const {
 	ProgressBar(Point(0,0), 50, (int)Scene::Size().x).draw_monochrome(time_limit_ms - stopwatch.ms(), time_limit_ms);
 }
 
+Rect PaintScene::draw_button_rect(Rect rect, HSV button_color, const HSV& shadow_color)const {
+	Vec2 shadow{ 0, rect.h / 7.5 };
+	if (rect.mouseOver()) {
+		button_color = button_color.setS(button_color.s * 4 / 5);
+	}
+	if (rect.leftPressed()) {
+		rect = rect.stretched(-shadow.y, 0, shadow.y, 0);
+		rect.rounded(10).draw(button_color);
+	}
+	else {
+		rect.rounded(10).drawShadow(shadow, 5, 0, shadow_color).draw(button_color);
+	}
+	return rect;
+}
+void PaintScene::draw_button_label(const String& label, const Rect& rect, const HSV& color)const {
+	int left = 0, right = 1000;
+	while (Abs(right - left) > 1) {
+		int mid = (left + right) / 2;
+		if (font(label).draw(mid, rect.stretched(-rect.h / 20), HSV{ 0,0 })) {
+			left = mid;
+		}
+		else {
+			right = mid;
+		}
+	}
+	font(label).drawAt(left, rect.center(), color);
+}
+
+void PaintScene::draw_description(void) const{
+	font(description).drawAt(25, Scene::Size().x * 3 / 20, Scene::Center().y, Palette::Black);
+}
+
 void PaintScene::finish_drawing(void){
 	stopwatch.reset();
 	connect.post_image(this->image, image_type);
@@ -113,12 +145,15 @@ void PaintScene::finish_drawing(void){
 void PaintScene::draw(void) const {
 	texture.drawAt(texture_center);
 	colorpalette.draw();
+	Rect rect = draw_button_rect(button_rect, to_monochrome(Palette::Skyblue), to_monochrome(Palette::Darkblue));
+	draw_button_label(U"完成", rect, to_monochrome(Palette::White));
 	draw_canpus_rectframe();
 	draw_progress_bar();
+	draw_description();
 }
 void PaintScene::update(void){
 	// ボタンが押されるか、時間制限を超えていたら
-	if(SimpleGUI::Button(U"完成！！！", Vec2(Scene::Center().x * 1.5, Scene::Center().y), unspecified) or stopwatch.ms() > time_limit_ms){
+	if(button_rect.leftReleased() or stopwatch.ms() > time_limit_ms){
 		finish_drawing();
 		return;
 	}
