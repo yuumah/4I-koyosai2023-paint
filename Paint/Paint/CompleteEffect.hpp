@@ -10,5 +10,5 @@ private:
 	Point circle_start;
 	double circle_radius;
 	Color circle_color;
-	const Vec2 circle_velocity = Scene::Size() / 10;
+	const double circle_time = 1.5; // [s]
 };

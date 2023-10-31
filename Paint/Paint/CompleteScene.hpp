@@ -18,5 +18,5 @@ private:
 	// 完成時のエフェクト
 	void update_effect(void);
 	Effect effect;
-	const int effect_amount = 10; // 1フレームのエフェクト数
+	const int effect_amount = 5; // 1フレームのエフェクト数
 };

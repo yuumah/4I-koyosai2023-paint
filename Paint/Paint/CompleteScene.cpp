@@ -4,8 +4,8 @@
 # include "CompleteEffect.hpp"
 
 CompleteScene::CompleteScene(const InitData &init) : IScene(init){
-	//const Image &image = getData().get_completed_image();
-	const Image &image = Image(U"./completed.png");
+	const Image &image = getData().get_completed_image();
+	//const Image &image = Image(U"./completed.png");
 	texture = Texture(image);
 	stopwatch.start();
 }
@@ -28,13 +28,14 @@ void CompleteScene::draw_completed(void) const {
 }
 
 void CompleteScene::update_effect(void){
+	effect.update();
 	// イージングの進み具合を計算
-	const double t = stopwatch.sF() / (double)display_time;
+	const double t = (stopwatch.sF() * 1.2) / (double)display_time;
+	if (not(0.0 <= t and t <= 1.0)) {
+		return;
+	}
 	const double e = EaseOutCirc(t);
-	Console << U"e={} \t n={}"_fmt(e, effect_amount * e);
-	for (int i = 0; i < effect_amount * e; i++) {
+	for (int i = 0; i < effect_amount *(1- e); i++) {
 		effect.add<CompleteEffect>();
 	}
-	effect.update();
-	Console << effect.num_effects();
 }
