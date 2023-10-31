@@ -32,3 +32,21 @@ const Image &Data::get_completed_image(void) const {
 Color to_monochrome(const Color &color){
 	return Color((uint8)(color.r*0.30 + color.g*0.59 + color.b*0.11));
 }
+
+constexpr int sliderHeight = 50;
+constexpr int paddingLeft = 20;
+
+void Slider(const StringView label, double &rate, const Point &pos, const int labelWidth, const int sliderWidth, const bool enabled) {
+	static const Font font = Font(20);
+	Rect(pos, labelWidth + sliderWidth + paddingLeft, sliderHeight).draw(Palette::White);
+	Rect(pos + Point(labelWidth, sliderHeight / 3), sliderWidth, sliderHeight / 3).rounded(4.2).draw(ColorF(0.7));
+	Rect(pos + Point(labelWidth, sliderHeight / 3), int(sliderWidth * rate), sliderHeight / 3).rounded(4.2).draw(ColorF(0.5));
+	font(label).draw(Arg::leftCenter(pos + Point(5, sliderHeight / 2)), Palette::Black);
+	const RectF smallRect(Arg::center(pos + Vec2(labelWidth + int(sliderWidth * rate), sliderHeight / 2)), 16, 24);
+	const RoundRect smallRoundRect = smallRect.rounded(4.2);
+	smallRoundRect.draw(Palette::White).drawFrame(1, ColorF(0.67));
+	if (enabled && Cursor::OnClientRect() && Rect(pos + Point(labelWidth, 0), sliderWidth, sliderHeight).leftPressed()) {
+		const double p = Cursor::PosF().x - pos.x - labelWidth;
+		rate = p / sliderWidth;
+	}
+}

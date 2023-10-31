@@ -21,3 +21,5 @@ private:
 Color to_monochrome(const Color &color);
 
 using App = SceneManager<String, Data>;
+
+void Slider(const StringView label, double &rate, const Point& pos, const int labelWidth, const int sliderWidth, const bool enabled = true);
