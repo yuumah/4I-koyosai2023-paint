@@ -1,0 +1,14 @@
+﻿# pragma once
+# include <Siv3D.hpp> // Siv3D v0.6.12
+
+struct CompleteEffect : IEffect {
+public:
+	CompleteEffect(void);
+	bool update(double t) override;
+private:
+	Circle circle;
+	Point circle_start;
+	double circle_radius;
+	Color circle_color;
+	const Vec2 circle_velocity = Scene::Size() / 10;
+};
