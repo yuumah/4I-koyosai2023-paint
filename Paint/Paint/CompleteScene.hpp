@@ -10,11 +10,15 @@ public:
 	void update(void);
 
 private:
+	// 透明から不透明へアップデート
+	void update_texture(void);
+	Image image;
+	Image image_nochange;
 	// 完成した画像の描画
 	void draw_completed(void) const;
-	const int display_time = 10; // [s]
+	const double display_time = 10.0; // [s]
 	Stopwatch stopwatch;
-	Texture texture;
+	DynamicTexture texture;
 	// 完成時のエフェクト
 	void update_effect(void);
 	Effect effect;

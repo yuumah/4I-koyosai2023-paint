@@ -4,9 +4,9 @@
 # include "CompleteEffect.hpp"
 
 CompleteScene::CompleteScene(const InitData &init) : IScene(init){
-	const Image &image = getData().get_completed_image();
-	//const Image &image = Image(U"./completed.png");
-	texture = Texture(image);
+	this->image = getData().get_completed_image();
+	this->image_nochange = this->image;
+	texture = DynamicTexture(image);
 	stopwatch.start();
 }
 
@@ -15,9 +15,10 @@ void CompleteScene::draw(void) const {
 }
 
 void CompleteScene::update(void){
+	update_texture();
 	draw_completed();
 	update_effect();
-	if(stopwatch.s() > display_time){
+	if(stopwatch.sF() > display_time){
 		changeScene(U"StartScene");
 		return;
 	}
@@ -25,6 +26,18 @@ void CompleteScene::update(void){
 
 void CompleteScene::draw_completed(void) const {
 	texture.drawAt(Scene::Center());
+}
+
+void CompleteScene::update_texture(void) {
+	double rate = stopwatch.sF() / (display_time * 0.5);
+	if (rate <= 1.0) {
+		for (auto p : step(image_nochange.size())){
+			if (image_nochange[p].a != 0) {
+				image[p].setA(rate * 255);
+			}
+		}
+		texture.fill(image);
+	}
 }
 
 void CompleteScene::update_effect(void){
