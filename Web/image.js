@@ -74,6 +74,7 @@ function loadImage(index) {
       img.width = (allimages[imgindex] !== "elephant") ? "100" : "250";
       
       endimages.push(img);
+      endindexes[imgindex] = index + 1;
       if (endimages.length > 3) endimages.shift();
       document.body.appendChild(img);
 			resolve(index); // 画像の読み込みが成功した場合
@@ -118,6 +119,9 @@ async function loadImages() {
 
 
 async function reloadImages() {
+  i = 0;
+  endimages.length = 0;
+  imgindex = 0;
   while (i < endindexes.length) {
     try {
       await loadImage(endindexes[i]);
@@ -125,9 +129,7 @@ async function reloadImages() {
     if (imgindex < allimages.length - 1) imgindex++;
     i++;
   }
-  i = 0;
-  endimages.length = 0;
-  imgindex = 0;
+  
 }
 
 
