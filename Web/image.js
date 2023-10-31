@@ -1,10 +1,13 @@
-let index = 0;
-let imgindex = 0;
+let i = 0; // endindexesのインデックス
+let index = 0; // urlのインデックス
+var imgindex = 0; // allimagesのインデックス
 let balloons = [];
 let endimages = [];
+let endindexes = new Array(5).fill(-1);
 let animal_poses = [];
 const allimages = ["flower", "balloon", "turtle", "butterfly", "elephant"];
 const leave_dist = 20; // [px]
+const timeout = 2000; // [ms]
 
 function isAnimal(imgindex) {
   return imgindex >= 2;
@@ -19,13 +22,12 @@ function calc_animal_min_dist(pos) {
   return Math.sqrt(min_dist);
 }
 
-
 function generate_random_pos() {
   // balloon or flower
   if (!isAnimal(imgindex)) {
     let randomY = 0;
     if (allimages[imgindex] !== "balloon") {
-      randomY = Math.floor(Math.random() * 60) + 25;
+      randomY = Math.floor(Math.random() * 60) + 30;
     }
     else {
       randomY = randomY = Math.floor(Math.random() * 20);
@@ -36,7 +38,7 @@ function generate_random_pos() {
 
   // 周りとの距離がleave_dist以上のものを適当に探す
   for (let i = 0; i < 100; i++) {
-    const randomY = Math.floor(Math.random() * 60) + 25;
+    const randomY = Math.floor(Math.random() * 50) + 30;
     const randomX = (allimages[imgindex] !== "elephant") ? Math.floor(Math.random() * 90) : Math.floor(Math.random() * 80);
     const pos = { y: randomY, x: randomX };
     const min_dist = calc_animal_min_dist(pos);
@@ -57,6 +59,7 @@ function loadImage(index) {
 		img.className = allimages[imgindex];
 		img.src = "http://tk2-233-26371.vs.sakura.ne.jp:7000/images?type="+ allimages[imgindex] +"&index=" + index;
 		img.onload = () => {
+      console.log("onload" + imgindex, index)
       const random_pos = generate_random_pos();
 
       if (allimages[imgindex] === "balloon") {
@@ -70,19 +73,22 @@ function loadImage(index) {
       img.style.top = random_pos.y + "%";
       img.width = (allimages[imgindex] !== "elephant") ? "100" : "250";
       
-      if (endimages.length > 3) endimages.shift();
       endimages.push(img);
+      if (endimages.length > 3) endimages.shift();
       document.body.appendChild(img);
 			resolve(index); // 画像の読み込みが成功した場合
 		};
 	
 		img.onerror = () => {
+      console.log("onerror" + imgindex, index)
+      
       if (endimages.length > 0 && endimages) {
         for(const endimage of endimages){
           endimage.width = (allimages[imgindex] !== "elephant") ? "150" : "275";
         }
-        endimages = [];
+        endimages.length = 0;
       }
+    
 			reject(index); // 画像の読み込みが失敗した場合
 		};
 	});
@@ -93,19 +99,37 @@ async function loadImages() {
     try {
       await loadImage(index);
     } catch (errorIndex) {
+      endindexes[imgindex] = errorIndex;
       if (imgindex < allimages.length - 1) {
         imgindex++;
         index = 0;
         await loadImage(index);
       }
       else {
-        // allimages = 0;
+        endimages.length = 0;
+        imgindex = 0;
         break;
       }
     }
     index++;
   }
+  requestAnimationFrame(moveImage);
 }
+
+
+async function reloadImages() {
+  while (i < endindexes.length) {
+    try {
+      await loadImage(endindexes[i]);
+    } catch {}
+    if (imgindex < allimages.length - 1) imgindex++;
+    i++;
+  }
+  i = 0;
+  endimages.length = 0;
+  imgindex = 0;
+}
+
 
 function moveImage() {
   let leftArray = balloons.map((item) => (item.offsetLeft / window.innerWidth) * 100);
@@ -123,7 +147,8 @@ function moveImage() {
       balloons[index].style.left = "0%";
     }
   }
+  reloadImages();
   requestAnimationFrame(moveImage);
 }
 loadImages();
-requestAnimationFrame(moveImage);
+
