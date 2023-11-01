@@ -1,5 +1,6 @@
 ﻿# pragma once
 # include <Siv3D.hpp> // Siv3D v0.6.12
+# include "Data.hpp"
 # include "CompleteScene.hpp"
 # include "CompleteEffect.hpp"
 
@@ -11,7 +12,9 @@ CompleteScene::CompleteScene(const InitData &init) : IScene(init){
 }
 
 void CompleteScene::draw(void) const {
-	
+	if (stopwatch.sF() > display_time_image) {
+		draw_description();
+	}
 }
 
 void CompleteScene::update(void){
@@ -28,8 +31,13 @@ void CompleteScene::draw_completed(void) const {
 	texture.drawAt(Scene::Center());
 }
 
+void CompleteScene::draw_description() const {
+	const double alpha = (stopwatch.sF() - display_time_image) / ((display_time - display_time_image) / 2.0);
+	font(description).drawAt(TextStyle::Outline(0.2, ColorF{ 1.0,1.0,1.0,alpha }), Scene::Center(), ColorF{ 0.0, 0.0, 0.0, alpha });
+}
+
 void CompleteScene::update_texture(void) {
-	double rate = stopwatch.sF() / (display_time * 0.5);
+	double rate = stopwatch.sF() / (display_time_image * 0.5);
 	if (rate <= 1.0) {
 		for (auto p : step(image_nochange.size())){
 			if (image_nochange[p].a != 0) {
