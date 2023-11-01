@@ -1,8 +1,11 @@
 let i = 0; // endindexesのインデックス
 let index = 0; // urlのインデックス
-var imgindex = 0; // allimagesのインデックス
+let imgindex = 0; // allimagesのインデックス
 let balloons = [];
 let endimages_fl = [], endimages_ba = [], endimages_tu = [], endimages_bu = [], endimages_el = [];
+let endimages = [];
+endimages.push([]);
+let shift = true; // loadImage = true, reload = false
 let endindexes = new Array(5).fill(-1);
 let animal_poses = [];
 const allimages = ["flower", "balloon", "turtle", "butterfly", "elephant"];
@@ -52,86 +55,14 @@ function generate_random_pos() {
   return { y: randomY, x: randomX };
 }
 
-function push_endimage(imgindex, img) {
-  switch (imgindex) {
-    case 0:
-      endimages_fl.push(img);
-      if (endimages_fl.length > 3){
-        endimages_fl[0].width = "100";
-        endimages_fl.shift();
-      }
-      break;
-    case 1:
-      endimages_ba.push(img);
-      if (endimages_ba.length > 3){
-        endimages_ba[0].width = "100";
-        endimages_ba.shift();
-      }
-      break;
-    case 2:
-      endimages_tu.push(img);
-      if (endimages_tu.length > 3){
-        endimages_tu[0].width = "100";
-        endimages_tu.shift();
-      }
-      break;
-    case 3: 
-      endimages_bu.push(img);
-      if (endimages_bu.length > 3){
-        endimages_bu[0].width = "100";
-        endimages_bu.shift();
-      }
-      break;
-    case 4:
-      endimages_el.push(img);
-      if (endimages_el.length > 3){
-        endimages_el[0].width = "175";
-        endimages_el.shift();
-      }
-      break;
+function width_border_change(imgindex) {
+  if (endimages[imgindex].length > 0){
+    for(let endimage of endimages[imgindex]){
+      endimage.width = "150";
+      endimage.style.border = "solid 2px red";
+    }
   }
 }
-
-function width_change(index) {
-  switch (index) {
-    case 0:
-      if (endimages_fl.length > 0){
-        for(const endimage_fl of endimages_fl){
-          endimage_fl.width = "150";
-        }
-      }
-      break;
-    case 1:
-      if (endimages_ba.length > 0){
-        for(const endimage_ba of endimages_ba){
-          endimage_ba.width = "150";
-        }
-      }
-      break;
-    case 2:
-      if (endimages_tu.length > 0){
-        for(const endimage_tu of endimages_tu){
-          endimage_tu.width = "150";
-        }
-      }
-      break;
-    case 3:
-      if (endimages_bu.length > 0){
-        for(const endimage_bu of endimages_bu){
-          endimage_bu.width = "150";
-        }
-      }
-      break;
-    case 4:
-      if (endimages_el.length > 0){
-        for(const endimage_el of endimages_el){
-          endimage_el.width = "225";
-        }
-      }
-      break;
-  }
-}
-
 
 function loadImage(index) {
 	return new Promise((resolve, reject) => {
@@ -152,7 +83,15 @@ function loadImage(index) {
       img.style.left = random_pos.x + "%";
       img.style.top = random_pos.y + "%";
       img.width = (allimages[imgindex] === "elephant") ? "200" : "100";
-      push_endimage(imgindex, img);
+      let indexnum = (shift) ? endimages.length - 1 : imgindex;
+
+      if (endimages[indexnum].length === 3){
+        endimages[indexnum][0].width = "100";
+        endimages[indexnum][0].style.border = "none";
+        endimages[indexnum].shift();
+      }
+
+      endimages[indexnum].push(img);
 
       endindexes[imgindex] = index + 1;
 
@@ -162,8 +101,8 @@ function loadImage(index) {
 	
 		img.onerror = () => {
       
-      width_change(imgindex);
-    
+      width_border_change(imgindex);
+
 			reject(index); // 画像の読み込みが失敗した場合
 		};
 	});
@@ -173,9 +112,9 @@ async function loadImages() {
   while (true) {
     try {
       await loadImage(index);
-    } catch (errorIndex) {
-      endindexes[imgindex] = errorIndex;
+    } catch (e) {
       if (imgindex < allimages.length - 1) {
+        endimages.push([]);
         imgindex++;
         index = 0;
         await loadImage(index);
@@ -187,6 +126,7 @@ async function loadImages() {
     }
     index++;
   }
+  shift = false;
   setInterval(() => {
     reload();
   }, 1000);
