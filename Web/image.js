@@ -2,7 +2,7 @@ let i = 0; // endindexesのインデックス
 let index = 0; // urlのインデックス
 var imgindex = 0; // allimagesのインデックス
 let balloons = [];
-let endimages = [];
+let endimages_fl = [], endimages_ba = [], endimages_tu = [], endimages_bu = [], endimages_el = [];
 let endindexes = new Array(5).fill(-1);
 let animal_poses = [];
 const allimages = ["flower", "balloon", "turtle", "butterfly", "elephant"];
@@ -52,6 +52,86 @@ function generate_random_pos() {
   return { y: randomY, x: randomX };
 }
 
+function push_endimage(imgindex, img) {
+  switch (imgindex) {
+    case 0:
+      endimages_fl.push(img);
+      if (endimages_fl.length > 3){
+        endimages_fl[0].width = "100";
+        endimages_fl.shift();
+      }
+      break;
+    case 1:
+      endimages_ba.push(img);
+      if (endimages_ba.length > 3){
+        endimages_ba[0].width = "100";
+        endimages_ba.shift();
+      }
+      break;
+    case 2:
+      endimages_tu.push(img);
+      if (endimages_tu.length > 3){
+        endimages_tu[0].width = "100";
+        endimages_tu.shift();
+      }
+      break;
+    case 3: 
+      endimages_bu.push(img);
+      if (endimages_bu.length > 3){
+        endimages_bu[0].width = "100";
+        endimages_bu.shift();
+      }
+      break;
+    case 4:
+      endimages_el.push(img);
+      if (endimages_el.length > 3){
+        endimages_el[0].width = "200";
+        endimages_el.shift();
+      }
+      break;
+  }
+}
+
+function width_change(index) {
+  switch (index) {
+    case 0:
+      if (endimages_fl.length > 0){
+        for(const endimage_fl of endimages_fl){
+          endimage_fl.width = "150";
+        }
+      }
+      break;
+    case 1:
+      if (endimages_ba.length > 0){
+        for(const endimage_ba of endimages_ba){
+          endimage_ba.width = "150";
+        }
+      }
+      break;
+    case 2:
+      if (endimages_tu.length > 0){
+        for(const endimage_tu of endimages_tu){
+          endimage_tu.width = "150";
+        }
+      }
+      break;
+    case 3:
+      if (endimages_bu.length > 0){
+        for(const endimage_bu of endimages_bu){
+          endimage_bu.width = "150";
+        }
+      }
+      break;
+    case 4:
+      if (endimages_el.length > 0){
+        for(const endimage_el of endimages_el){
+          endimage_el.width = "275";
+        }
+      }
+      break;
+  }
+}
+
 
 function loadImage(index) {
 	return new Promise((resolve, reject) => {
@@ -71,11 +151,11 @@ function loadImage(index) {
 
       img.style.left = random_pos.x + "%";
       img.style.top = random_pos.y + "%";
-      img.width = (allimages[imgindex] !== "elephant") ? "100" : "250";
-      
-      endimages.push(img);
+      img.width = (allimages[imgindex] === "elephant") ? "200" : "100";
+      push_endimage(imgindex, img);
+
       endindexes[imgindex] = index + 1;
-      if (endimages.length > 3) endimages.shift();
+
       document.body.appendChild(img);
 			resolve(index); // 画像の読み込みが成功した場合
 		};
@@ -83,12 +163,7 @@ function loadImage(index) {
 		img.onerror = () => {
       console.log("onerror" + imgindex, index)
       
-      if (endimages.length > 0 && endimages) {
-        for(const endimage of endimages){
-          endimage.width = (allimages[imgindex] !== "elephant") ? "150" : "275";
-        }
-        endimages.length = 0;
-      }
+      width_change(imgindex);
     
 			reject(index); // 画像の読み込みが失敗した場合
 		};
@@ -107,7 +182,6 @@ async function loadImages() {
         await loadImage(index);
       }
       else {
-        endimages.length = 0;
         imgindex = 0;
         break;
       }
@@ -118,9 +192,8 @@ async function loadImages() {
 }
 
 
-async function reloadImages() {
+async function reload() {
   i = 0;
-  endimages.length = 0;
   imgindex = 0;
   while (i < endindexes.length) {
     try {
@@ -129,7 +202,6 @@ async function reloadImages() {
     if (imgindex < allimages.length - 1) imgindex++;
     i++;
   }
-  
 }
 
 
@@ -149,7 +221,7 @@ function moveImage() {
       balloons[index].style.left = "0%";
     }
   }
-  reloadImages();
+  reload();
   requestAnimationFrame(moveImage);
 }
 loadImages();
