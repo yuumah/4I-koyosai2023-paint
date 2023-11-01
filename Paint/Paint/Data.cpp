@@ -38,7 +38,7 @@ constexpr int paddingLeft = 20;
 
 void Slider(const StringView label, double &rate, const Point &pos, const int labelWidth, const int sliderWidth, const bool enabled) {
 	static const Font font = Font(20);
-	Rect(pos, labelWidth + sliderWidth + paddingLeft, sliderHeight).draw(Palette::White);
+	Rect(pos, labelWidth + sliderWidth + paddingLeft, sliderHeight).draw(Scene::GetBackground());
 	Rect(pos + Point(labelWidth, sliderHeight / 3), sliderWidth, sliderHeight / 3).rounded(4.2).draw(ColorF(0.7));
 	Rect(pos + Point(labelWidth, sliderHeight / 3), int(sliderWidth * rate), sliderHeight / 3).rounded(4.2).draw(ColorF(0.5));
 	font(label).draw(Arg::leftCenter(pos + Point(5, sliderHeight / 2)), Palette::Black);

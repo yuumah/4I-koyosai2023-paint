@@ -32,6 +32,8 @@ public:
 	void draw(void) const;
 	void update(void);
 private:
+	// 線画の線を黒から白にする
+	void to_white(Image &image);
 	// 線画のtextureとその描画の中心座標、パス
 	Array<LineDrawing> line_drawings;
 	// 元の画像の大きさ

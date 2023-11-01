@@ -38,7 +38,7 @@ private:
 	// シーンの座標から画像の座標へ変換
 	Optional<Point> scenepos_to_imagepos(const Point &point) const;
 	// キャンパスの四角形を表示
-	void draw_canpus_rectframe(void) const;
+	void draw_canpus_rect(void) const;
 	// プログレスバーの表示
 	void draw_progress_bar(void) const;
 	// 完了ボタン
@@ -48,8 +48,11 @@ private:
 	void draw_button_label(const String &label, const Rect &rect, const HSV &color)const;
 	// 説明の描画
 	void draw_description(void) const;
-	String description =
+	const String description_left =
 		U"絵をクリックして塗りつぶし\n修正はできないよ！";
+	const String description_right =
+		U"スライダーを操作して\n赤・緑・青成分を調整";
+	const Color description_color = Palette::White;
 	// 完成or終了時の処理
 	void finish_drawing(void);
 	// カラーパレット

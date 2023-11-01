@@ -22,13 +22,8 @@ void ColorPalette::update_gui(void){
 	this->color.b = (uint8)(colorf.b * 255);
 }
 
-void ColorPalette::draw_description(void)const {
-	font(description).drawAt(Vec2{Scene::Size().x * 8.5 / 10, Scene::Center().y}, to_monochrome(this->color));
-}
-
 void ColorPalette::update(void){
 	update_gui();
 }
 void ColorPalette::draw(void) const {
-	draw_description();
 }

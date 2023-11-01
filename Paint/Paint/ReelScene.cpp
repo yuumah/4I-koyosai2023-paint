@@ -44,7 +44,9 @@ ReelScene::ReelScene(const InitData &init) : IScene(init){
 		const String image_type = FileSystem::FileName(directory);
 		const int cur = index;
 		for(const String &path : FileSystem::DirectoryContents(directory)){
-			const Texture texture = Texture(path);
+			Image image{ path };
+			to_white(image);
+			const Texture texture = Texture(image);
 			const Vec2 point(index * (texture.size().x * scaled_rate + texture_blank), Scene::Center().y);
 			assert(texture.size() == original_texture_size);
 			line_drawings.emplace_back(texture, path, point, image_type, index);
@@ -67,6 +69,14 @@ ReelScene::ReelScene(const InitData &init) : IScene(init){
 		// 左端まで来たら右端に移動させる
 		while(p.get_pos().x < Scene::Center().x - reel_length/2){
 			p.move_posx(reel_length);
+		}
+	}
+}
+
+void ReelScene::to_white(Image &image){
+	for (auto& pixel : image) {
+		if (pixel == Palette::Black) {
+			pixel = Palette::White;
 		}
 	}
 }

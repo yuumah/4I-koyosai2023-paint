@@ -95,8 +95,8 @@ Optional<Point> PaintScene::scenepos_to_imagepos(const Point& point) const {
 	}
 }
 
-void PaintScene::draw_canpus_rectframe(void) const {
-	Rect(Arg::center(texture_center), image.size()).drawFrame(1, 1, Palette::Black);
+void PaintScene::draw_canpus_rect(void) const {
+	Rect(Arg::center(texture_center), image.size()).draw(Palette::White).drawFrame(1, 1, Palette::Black);
 }
 
 void PaintScene::draw_progress_bar(void) const {
@@ -132,7 +132,8 @@ void PaintScene::draw_button_label(const String& label, const Rect& rect, const 
 }
 
 void PaintScene::draw_description(void) const{
-	font(description).drawAt(25, Scene::Size().x * 3 / 20, Scene::Center().y, Palette::Black);
+	font(description_left).drawAt(25, Scene::Size().x * 3 / 20, Scene::Center().y, description_color);
+	font(description_right).drawAt(25, Vec2{ Scene::Size().x * 8.5 / 10, Scene::Center().y }, to_monochrome(description_color));
 }
 
 void PaintScene::finish_drawing(void){
@@ -143,11 +144,11 @@ void PaintScene::finish_drawing(void){
 }
 
 void PaintScene::draw(void) const {
+	draw_canpus_rect();
 	texture.drawAt(texture_center);
 	colorpalette.draw();
 	Rect rect = draw_button_rect(button_rect, to_monochrome(Palette::Skyblue), to_monochrome(Palette::Darkblue));
 	draw_button_label(U"完成", rect, to_monochrome(Palette::White));
-	draw_canpus_rectframe();
 	draw_progress_bar();
 	draw_description();
 }

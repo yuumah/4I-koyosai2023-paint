@@ -10,7 +10,7 @@
 
 void Main(){
 	Window::Resize(1280, 720);
-	Scene::SetBackground(Palette::White);
+	Scene::SetBackground(ColorF{0.2, 0.2, 0.2});
 
 	App manager;
 	manager.add<StartScene>(U"StartScene");

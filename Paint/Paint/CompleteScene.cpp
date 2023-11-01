@@ -33,7 +33,7 @@ void CompleteScene::draw_completed(void) const {
 
 void CompleteScene::draw_description() const {
 	const double alpha = (stopwatch.sF() - display_time_image) / ((display_time - display_time_image) / 2.0);
-	font(description).drawAt(TextStyle::Outline(0.2, ColorF{ 1.0,1.0,1.0,alpha }), Scene::Center(), ColorF{ 0.0, 0.0, 0.0, alpha });
+	font(description).drawAt(TextStyle::Outline(0.2, ColorF{ 0.0,0.0,0.0,alpha }), Scene::Center(), ColorF{ 1.0, 1.0, 1.0, alpha });
 }
 
 void CompleteScene::update_texture(void) {

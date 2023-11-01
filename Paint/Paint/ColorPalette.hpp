@@ -13,8 +13,4 @@ private:
 	const Vec2 gui_size = { 200.0, 100.0 };
 	const double gui_label_width = 125;
 	void update_gui(void);
-	Font font{ 25, U"SourceHanSansJP-Medium.otf" };
-	const String description =
-		U"スライダーを操作して\n赤・緑・青成分を調整";
-	void draw_description(void)const ;
 };
