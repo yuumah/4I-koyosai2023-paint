@@ -27,7 +27,7 @@ function generate_random_pos() {
   if (!isAnimal(imgindex)) {
     let randomY = 0;
     if (allimages[imgindex] !== "balloon") {
-      randomY = Math.floor(Math.random() * 60) + 30;
+      randomY = Math.floor(Math.random() * 55) + 30;
     }
     else {
       randomY = randomY = Math.floor(Math.random() * 20);
@@ -47,7 +47,7 @@ function generate_random_pos() {
     }
   }
 
-  const randomY = Math.floor(Math.random() * 60) + 25;
+  const randomY = Math.floor(Math.random() * 55) + 30;
   const randomX = (allimages[imgindex] !== "elephant") ? Math.floor(Math.random() * 90) : Math.floor(Math.random() * 80);
   return { y: randomY, x: randomX };
 }
@@ -85,7 +85,7 @@ function push_endimage(imgindex, img) {
     case 4:
       endimages_el.push(img);
       if (endimages_el.length > 3){
-        endimages_el[0].width = "200";
+        endimages_el[0].width = "175";
         endimages_el.shift();
       }
       break;
@@ -125,7 +125,7 @@ function width_change(index) {
     case 4:
       if (endimages_el.length > 0){
         for(const endimage_el of endimages_el){
-          endimage_el.width = "275";
+          endimage_el.width = "225";
         }
       }
       break;

@@ -31,10 +31,10 @@ img {
     transform: translateX(0) scaleX(-1); /* 初期位置 */
   }
   25% {
-    transform: translateX(100px) scaleX(-1); /* 右に移動 */
+    transform: translateX(200px) scaleX(-1); /* 右に移動 */
   }
   50% {
-    transform: translateX(100px) scaleX(1); /* 反転 */
+    transform: translateX(200px) scaleX(1); /* 反転 */
   }
   75% {
     transform: translateX(0) scaleX(1); /* 左に移動 */
@@ -61,9 +61,9 @@ img {
 }
 
 .turtle {
-  animation: moveLeftRight 15s ease infinite;
+  animation: moveLeftRight 30s ease infinite;
 }
 
 .elephant {
-  animation: moveLeftRight 8s ease infinite;
+  animation: moveLeftRight 18s ease infinite;
 }
