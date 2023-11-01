@@ -42,13 +42,8 @@ void Connect::post_image(const FilePath &filepath, const String &image_type){
 		{ U"type", image_type },
 	}.formatUTF8();
 	if(const auto response = SimpleHTTP::Post(url, headers, data.data(), data.size(), save_response_path)){
-		if(response.isOK()){
-			Print << U"OK";
-		}else{
+		if(not response.isOK()){
 			throw Error(U"failed to post file!");
 		}
-		Print << response.getHeader();
-		Print << response.getStatusCodeInt();
-		Print << response.getStatusLine();
 	}
 }
