@@ -161,7 +161,6 @@ function loadImage(index) {
 		};
 	
 		img.onerror = () => {
-      console.log("onerror" + imgindex, index)
       
       width_change(imgindex);
     
@@ -188,6 +187,9 @@ async function loadImages() {
     }
     index++;
   }
+  setInterval(() => {
+    reload();
+  }, 1000);
   requestAnimationFrame(moveImage);
 }
 
@@ -221,7 +223,6 @@ function moveImage() {
       balloons[index].style.left = "0%";
     }
   }
-  reload();
   requestAnimationFrame(moveImage);
 }
 loadImages();
