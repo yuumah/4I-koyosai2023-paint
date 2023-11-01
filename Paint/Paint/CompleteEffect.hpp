@@ -3,7 +3,7 @@
 
 struct CompleteEffect : IEffect {
 public:
-	CompleteEffect(void);
+	CompleteEffect(double t);
 	bool update(double t) override;
 private:
 	Circle circle;

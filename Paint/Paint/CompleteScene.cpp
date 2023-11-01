@@ -48,7 +48,7 @@ void CompleteScene::update_effect(void){
 		return;
 	}
 	const double e = EaseOutCirc(t);
-	for (int i = 0; i < effect_amount *(1- e); i++) {
-		effect.add<CompleteEffect>();
+	for (int i = 0; i < effect_amount *(1.0 - e); i++) {
+		effect.add<CompleteEffect>(1.0 - e);
 	}
 }
