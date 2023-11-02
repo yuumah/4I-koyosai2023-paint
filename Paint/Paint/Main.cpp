@@ -11,6 +11,7 @@
 void Main(){
 	//Window::Resize(1280, 720);
 	Window::SetFullscreen(true);
+	System::SetTerminationTriggers(UserAction::CloseButtonClicked);
 	Scene::SetBackground(ColorF{0.2, 0.2, 0.2});
 
 	App manager;
