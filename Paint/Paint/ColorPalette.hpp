@@ -9,8 +9,8 @@ public:
 	Color get_color(void) const;
 private:
 	Color color = Palette::Black;
-	const Vec2 gui_leftup = { Scene::Center().x * 1.45 , 50 };
-	const Vec2 gui_size = { 200.0, 100.0 };
-	const double gui_label_width = 125;
+	const Vec2 gui_leftup = { Scene::Center().x * 1.30 , 75 };
+	const Vec2 gui_size = { 300.0, 150.0 };
+	const double gui_label_width = 300;
 	void update_gui(void);
 };

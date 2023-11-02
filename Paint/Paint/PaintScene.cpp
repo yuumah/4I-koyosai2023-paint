@@ -132,8 +132,8 @@ void PaintScene::draw_button_label(const String& label, const Rect& rect, const 
 }
 
 void PaintScene::draw_description(void) const{
-	font(description_left).drawAt(25, Scene::Size().x * 3 / 20, Scene::Center().y, description_color);
-	font(description_right).drawAt(25, Vec2{ Scene::Size().x * 8.5 / 10, Scene::Center().y }, to_monochrome(description_color));
+	font(description_left).drawAt(50, Scene::Size().x * 3.75 / 20, Scene::Center().y, description_color);
+	font(description_right).drawAt(50, Vec2{ Scene::Size().x * 8.0 / 10, Scene::Center().y }, to_monochrome(description_color));
 }
 
 void PaintScene::finish_drawing(void){

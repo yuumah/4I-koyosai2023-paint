@@ -43,7 +43,7 @@ private:
 	void draw_progress_bar(void) const;
 	// 完了ボタン
 	Font font{ 100, U"SourceHanSansJP-Medium.otf" };
-	Rect button_rect{ Scene::Size().x * 0.8, Scene::Size().y * 0.8, Scene::Size().x * 0.1, Scene::Size().y * 0.1 };
+	Rect button_rect{ Scene::Size().x * 0.75, Scene::Size().y * 0.75, Scene::Size().x * 0.15, Scene::Size().y * 0.15 };
 	Rect draw_button_rect(Rect rect, HSV button_color, const HSV &shadow_color)const;
 	void draw_button_label(const String &label, const Rect &rect, const HSV &color)const;
 	// 説明の描画

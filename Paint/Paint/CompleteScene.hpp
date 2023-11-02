@@ -26,6 +26,6 @@ private:
 	const int effect_amount = 5; // 1フレームのエフェクト数
 	// 完成後のメッセージ
 	void draw_description() const;
-	const Font font{ FontMethod::MSDF, 50, U"SourceHanSansJP-Medium.otf" };
+	const Font font{ FontMethod::MSDF, 75, U"SourceHanSansJP-Medium.otf" };
 	const String description = U"ありがとう！\nキミの協力のおかげで、\n世界にまたひとつ色が戻ったよ！\nさぁ、扉を抜けて、\nキミたちの作り上げた色のある世界を見に行こう！";
 };
