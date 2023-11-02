@@ -9,7 +9,8 @@
 
 
 void Main(){
-	Window::Resize(1280, 720);
+	//Window::Resize(1280, 720);
+	Window::SetFullscreen(true);
 	Scene::SetBackground(ColorF{0.2, 0.2, 0.2});
 
 	App manager;
