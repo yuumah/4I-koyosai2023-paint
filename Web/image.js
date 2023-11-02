@@ -4,8 +4,6 @@ let imgindex = 0; // allimagesのインデックス
 let balloons = [];
 let endimages_fl = [], endimages_ba = [], endimages_tu = [], endimages_bu = [], endimages_el = [];
 let endimages = [];
-endimages.push([]);
-let shift = true; // loadImage = true, reload = false
 let endindexes = new Array(5).fill(-1);
 let animal_poses = [];
 const allimages = ["flower", "balloon", "turtle", "butterfly", "elephant"];
@@ -56,8 +54,8 @@ function generate_random_pos() {
 }
 
 function width_border_change(imgindex) {
-  if (endimages[imgindex].length > 0){
-    for(let endimage of endimages[imgindex]){
+  if (endimages.length > 0){
+    for(let endimage of endimages){
       endimage.width = "150";
       endimage.style.border = "solid 2px red";
     }
@@ -83,15 +81,14 @@ function loadImage(index) {
       img.style.left = random_pos.x + "%";
       img.style.top = random_pos.y + "%";
       img.width = (allimages[imgindex] === "elephant") ? "200" : "100";
-      let indexnum = (shift) ? endimages.length - 1 : imgindex;
 
-      if (endimages[indexnum].length === 3){
-        endimages[indexnum][0].width = "100";
-        endimages[indexnum][0].style.border = "none";
-        endimages[indexnum].shift();
+      if (endimages.length === 3){
+        endimages[0].width = "100";
+        endimages[0].style.border = "none";
+        endimages.shift();
       }
 
-      endimages[indexnum].push(img);
+      endimages.push(img);
 
       endindexes[imgindex] = index + 1;
 
@@ -114,7 +111,6 @@ async function loadImages() {
       await loadImage(index);
     } catch (e) {
       if (imgindex < allimages.length - 1) {
-        endimages.push([]);
         imgindex++;
         index = 0;
         await loadImage(index);
@@ -126,7 +122,6 @@ async function loadImages() {
     }
     index++;
   }
-  shift = false;
   setInterval(() => {
     reload();
   }, 1000);
