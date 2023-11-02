@@ -62,13 +62,17 @@ ReelScene::ReelScene(const InitData &init) : IScene(init){
 	const LineDrawing selected_drawing = line_drawings[Random(range.first, range.second-1)];
 	getData().set_path(selected_drawing.get_path());
 	getData().set_image_type(selected_drawing.get_type());
-	//Print << U"selected: " << selected_drawing.type << U" " << selected_drawing.index;
-	const int start_pos = selected_drawing.get_index() + ((int)line_drawings.size() - 17 % (int)line_drawings.size());
+	//Print << U"selected: " << selected_drawing.get_type() << U" " << selected_drawing.get_index();
+	const int start_pos = ((int)line_drawings.size() + selected_drawing.get_index() - 17) % (int)line_drawings.size();
 	for(LineDrawing &p : line_drawings){
-		p.move_posx(-start_pos * (p.get_texture().size().x * scaled_rate + texture_blank) + 50);
+		p.move_posx(-(start_pos + 2) * (p.get_texture().size().x * scaled_rate + texture_blank) + Scene::Center().x + 120);
 		// 左端まで来たら右端に移動させる
 		while(p.get_pos().x < Scene::Center().x - reel_length/2){
 			p.move_posx(reel_length);
+		}
+		// 右端まで来たら左端に移動させる
+		while(p.get_posx() > Scene::Center().x + reel_length/2){
+			p.move_posx(-reel_length);
 		}
 	}
 }
