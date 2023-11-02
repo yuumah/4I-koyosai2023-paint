@@ -113,7 +113,7 @@ async function loadImages() {
       if (imgindex < allimages.length - 1) {
         imgindex++;
         index = 0;
-        await loadImage(index);
+        continue;
       }
       else {
         imgindex = 0;
