@@ -16,14 +16,14 @@ private:
 	Image image_nochange;
 	// 完成した画像の描画
 	void draw_completed(void) const;
-	const double display_time = 30.0; // [s]
-	const double display_time_image = display_time * 0.5;
+	const double display_time = 16.0; // [s]
+	const double display_time_image = display_time * 0.3;
 	Stopwatch stopwatch;
 	DynamicTexture texture;
 	// 完成時のエフェクト
 	void update_effect(void);
 	Effect effect;
-	const int effect_amount = 5; // 1フレームのエフェクト数
+	const int effect_amount = 5*5; // 1フレームのエフェクト数
 	// 完成後のメッセージ
 	void draw_description() const;
 	const Font font{ FontMethod::MSDF, 75, U"SourceHanSansJP-Medium.otf" };
