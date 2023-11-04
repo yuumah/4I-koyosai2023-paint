@@ -11,8 +11,10 @@ app.use(bodyParser.json());
 
 const token = require("./token.json").token;
 const image_types = glob.sync("images/*").map((path) => {
-  return path.substring(path.indexOf("/")+1);
+  if(path.indexOf("/") !== -1) return path.substring(path.indexOf("/")+1);
+  return path.substring(path.indexOf("\\")+1);
 });
+console.log(image_types);
 
 app.get("/", (req, res) => {
   res.writeHead(200, { "Content-Type": "text/html" });
