@@ -59,7 +59,7 @@ private:
 	ColorPalette colorpalette;
 	// 時間制限
 	Stopwatch stopwatch;
-	const int time_limit_ms = 120 * 1000;
+	const int time_limit_ms = 1000 * 10 * 3;
 	// 接続用
 	Connect connect;
 };
