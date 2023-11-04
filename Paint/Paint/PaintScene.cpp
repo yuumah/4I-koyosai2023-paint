@@ -154,7 +154,7 @@ void PaintScene::draw(void) const {
 }
 void PaintScene::update(void){
 	// ボタンが押されるか、時間制限を超えていたら
-	if(button_rect.leftReleased() or stopwatch.ms() > time_limit_ms){
+	if(button_rect.leftReleased()){
 		finish_drawing();
 		return;
 	}
