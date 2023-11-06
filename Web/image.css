@@ -1,0 +1,69 @@
+html,body{
+  overflow: hidden
+}
+
+img {
+  position: absolute;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes moveUpDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-50px); /* 画像を上下に移動させる距離を設定 */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes moveLeftRight {
+  0% {
+    transform: translateX(0) scaleX(-1); /* 初期位置 */
+  }
+  25% {
+    transform: translateX(200px) scaleX(-1); /* 右に移動 */
+  }
+  50% {
+    transform: translateX(200px) scaleX(1); /* 反転 */
+  }
+  75% {
+    transform: translateX(0) scaleX(1); /* 左に移動 */
+  }
+  100% {
+    transform: translateX(0) scaleX(-1); /* 初期位置に戻る */
+  }
+}
+
+.flower {
+  animation: shake 3s ease infinite;
+}
+
+.bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.butterfly {
+  animation: moveUpDown 3s ease infinite;
+}
+
+.turtle {
+  animation: moveLeftRight 30s ease infinite;
+}
+
+.elephant {
+  animation: moveLeftRight 18s ease infinite;
+}
